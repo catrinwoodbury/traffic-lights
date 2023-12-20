@@ -1,0 +1,36 @@
+{
+    "lights":
+    [
+        {
+            "wads_bowles":
+            {
+                "latitude": 39.609719,
+                "longitude": -105.091315,
+                "north_south": [ 30, 55, 1697317209.0],
+                "east_west": [ 45, 30, 1699234130.0] 
+            }
+
+        },
+        {
+            "wads_cole":
+            {
+                "latitude": 39.595241,   
+                "longitude":-105.091407,
+                "north_south": [ 55, 120, 169731890.0],
+                "east_west": [ 45, 30, 1699234765.0] 
+            }
+
+        },
+        {
+            "wads_ken":
+            {
+                "latitude":39.580697,    
+                "longitude":-105.087083,
+                "north_south": [ 20, 130, 169731888.0],
+                "east_west": [ 45, 60, 1699234876.0]
+            }
+
+        }
+    ]
+
+}
