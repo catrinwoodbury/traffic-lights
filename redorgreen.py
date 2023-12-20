@@ -2,6 +2,10 @@ import datetime
 import time
 from datetime import timedelta
 import math
+import json
+
+with open("intervals.json") as interval_data:
+    data = json.load(interval_data)
 
 ## user input time when light turns greem
 ## convert time into datetime
@@ -27,8 +31,9 @@ totaltime = timedelta.total_seconds(between_time)
 print(totaltime)
 
 ## how long the light is red/green for
-greentime = 45
-redtime = 60
+greentime = (data["intersections"][0]["directions"]["north"]["green_time"])
+redtime = (data["intersections"][0]["directions"]["north"]["red_time"])
+
 
 ## the amount of time inbetween the time when the light turned green and the arrival at the light
 
@@ -57,5 +62,3 @@ else:
     redleft = round(redtime - timeinred, 3)
     print("The light will be RED for", redleft, "more seconds.")
 
-    #### testing
-    #lksdgha;lskd
