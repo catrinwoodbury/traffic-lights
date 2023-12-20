@@ -2,27 +2,78 @@
     "intersections": [
         {
             "name": "bowles_wadsworth",
-            "lattitude": "39.609711",
-            "longitude": "-105.091312",
-            "green_time": "45",
-            "red_time": "30",
-            "start_time": "2460283.9513889"
+            "lattitude": 39.609711,
+            "longitude": -105.091312,
+            "north" :{
+                "green_time": 45,
+                "red_time": 30,
+                "start_time": 2460283.9513889
+            },
+            "east" :{
+                "green_time": 45,
+                "red_time": 30,
+                "start_time": 2460283.9513889
+            },
+            "south" :{
+                "green_time": 45,
+                "red_time": 30,
+                "start_time": 2460283.9513889
+            },
+            "west" :{
+                "green_time": 45,
+                "red_time": 30,
+                "start_time": 2460283.9513889
+            }  
         },
         {
             "name": "coalmine_wadsworth",
-            "lattitude": "39.595246",
-            "longitude": "-105.091410",
-            "green_time": "60",
-            "red_time": "40",
-            "start_time": "2460283.8645833"
+            "lattitude": 39.595246,
+            "longitude": -105.091410,
+            "north" :{
+                "green_time": 45,
+                "red_time": 30,
+                "start_time": 2460283.9513889
+            },
+            "east" :{
+                "green_time": 45,
+                "red_time": 30,
+                "start_time": 2460283.9513889
+            },
+            "south" :{
+                "green_time": 45,
+                "red_time": 30,
+                "start_time": 2460283.9513889
+            },
+            "west" :{
+                "green_time": 45,
+                "red_time": 30,
+                "start_time": 2460283.9513889
+            }  
         },
         {
             "name": "kencaryl_wadsworth",
-            "lattitude": "39.39.580700",
-            "longitude": "-105.087085",
-            "green_time": "120",
-            "red_time": "40",
-            "start_time": "2460283.7638889"
+            "lattitude": 39.580700,
+            "longitude": -105.087085,
+            "north" :{
+                "green_time": 45,
+                "red_time": 30,
+                "start_time": 2460283.9513889
+            },
+            "east" :{
+                "green_time": 45,
+                "red_time": 30,
+                "start_time": 2460283.9513889
+            },
+            "south" :{
+                "green_time": 45,
+                "red_time": 30,
+                "start_time": 2460283.9513889
+            },
+            "west" :{
+                "green_time": 45,
+                "red_time": 30,
+                "start_time": 2460283.9513889
+            }  
         }
     ]
 }
