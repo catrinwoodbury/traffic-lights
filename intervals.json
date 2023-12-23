@@ -2,7 +2,7 @@
     "intersections": [
         {
             "name": "bowles_wadsworth",
-            "place_id": "EjRTIFdhZHN3b3J0aCBCbHZkICYgVyBCb3dsZXMgQXZlLCBDb2xvcmFkbyA4MDEyMywgVVNBImYiZAoUChIJVbQSNht_a4cR-ONnuZFtOdgSFAoSCVW0EjYbf2uHEfjjZ7mRbTnYGhQKEgnZ3WULc39rhxHq_GD1AChpAhoUChIJK3tpfgN_a4cRM-ZH5bANMcQiCg2a-ZsXFYFSXME",
+            "place_id": "EjlTIFdhZHN3b3J0aCBCbHZkICYgVyBCb3dsZXMgQXZlLCBDb2x1bWJpbmUsIENPIDgwMTIzLCBVU0EiZiJkChQKEglVtBI2G39rhxHJKFzsf_AfzxIUChIJVbQSNht_a4cRyShc7H_wH88aFAoSCdndZQtzf2uHEer8YPUAKGkCGhQKEgkre2l-A39rhxEz5kflsA0xxCIKDV7zmxcVrFpcwQ",
             "directions":{
                 "north" :{
                     "green_time": 45,
@@ -28,7 +28,7 @@
         },
         {
             "name": "coalmine_wadsworth",
-            "place_id": "EjxTIFdhZHN3b3J0aCBCbHZkICYgVyBDb2FsIE1pbmUgQXZlLCBDb2x1bWJpbmUsIENPIDgwMTIzLCBVU0EiZiJkChQKEgnBMrAv5X5rhxHdxwkXph2eNhIUChIJwTKwL-V-a4cR3ccJF6YdnjYaFAoSCdndZQtzf2uHEer8YPUAKGkCGhQKEgm13lvs4X5rhxGTaGKLozKeTyIKDYG-mRcVV1dcwQ",
+            "place_id": "EjxXIENvYWwgTWluZSBBdmUgJiBTIFdhZHN3b3J0aCBCbHZkLCBLZW4gQ2FyeWwsIENPIDgwMTIzLCBVU0EiZiJkChQKEgnBMrAv5X5rhxFnMfcmLyh8UBIUChIJwTKwL-V-a4cRZzH3Ji8ofFAaFAoSCbXeW-zhfmuHEZNoYoujMp5PGhQKEgnZ3WULc39rhxHq_GD1AChpAiIKDarDmRcVe05cwQ",
             "directions":{
                 "north" :{
                     "green_time": 45,

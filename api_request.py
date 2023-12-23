@@ -1,14 +1,26 @@
 import requests
 import json
 
-response = requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?destinations=40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&origins=40.6655101%2C-73.89188969999998&key=AIzaSyCqhq6c811qavWvjC3vpEVuoZcZtcJO_0Q")
+with open("api_key.json") as api:
+    data = json.load(api)
+
+with open("intervals.json") as intervals:
+    jsonfile = json.load(intervals)
+
+## import api key
+api_key = str(data["api_key"])
+
+## import placeid's from intervals json file
+destination = str(jsonfile["intersections"][2]["place_id"])
+
+origin = str(jsonfile["intersections"][1]["place_id"])
+
+url = "https://maps.googleapis.com/maps/api/distancematrix/json?" + "destinations=placeid:" + destination + "&origins=place_id:" + origin + "&key=" + api_key
+## As is standard in URLs, all parameters are separated using the ampersand (&) character
+response = requests.get(url)
 
 jsonapi =(response.json())
 
 final = json.dumps(jsonapi, indent = 4)
 
 print(final)
-
-redtime = (jsonapi["destination_addresses"][1])
-
-print(redtime)
