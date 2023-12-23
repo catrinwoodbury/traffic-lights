@@ -2,8 +2,7 @@
     "intersections": [
         {
             "name": "bowles_wadsworth",
-            "lattitude": 39.609711,
-            "longitude": -105.091312,
+            "place_id": "EjRTIFdhZHN3b3J0aCBCbHZkICYgVyBCb3dsZXMgQXZlLCBDb2xvcmFkbyA4MDEyMywgVVNBImYiZAoUChIJVbQSNht_a4cR-ONnuZFtOdgSFAoSCVW0EjYbf2uHEfjjZ7mRbTnYGhQKEgnZ3WULc39rhxHq_GD1AChpAhoUChIJK3tpfgN_a4cRM-ZH5bANMcQiCg2a-ZsXFYFSXME",
             "directions":{
                 "north" :{
                     "green_time": 45,
@@ -29,8 +28,7 @@
         },
         {
             "name": "coalmine_wadsworth",
-            "lattitude": 39.595246,
-            "longitude": -105.091410,
+            "place_id": "EjxTIFdhZHN3b3J0aCBCbHZkICYgVyBDb2FsIE1pbmUgQXZlLCBDb2x1bWJpbmUsIENPIDgwMTIzLCBVU0EiZiJkChQKEgnBMrAv5X5rhxHdxwkXph2eNhIUChIJwTKwL-V-a4cR3ccJF6YdnjYaFAoSCdndZQtzf2uHEer8YPUAKGkCGhQKEgm13lvs4X5rhxGTaGKLozKeTyIKDYG-mRcVV1dcwQ",
             "directions":{
                 "north" :{
                     "green_time": 45,
@@ -56,8 +54,7 @@
         },
         {
             "name": "kencaryl_wadsworth",
-            "lattitude": 39.580700,
-            "longitude": -105.087085,
+            "place_id": "EjxTIFdhZHN3b3J0aCBCbHZkICYgVyBLZW4gQ2FyeWwgQXZlLCBDb2x1bWJpbmUsIENPIDgwMTI4LCBVU0EiZiJkChQKEglfWtJQjH5rhxGyZrrLLwtsYRIUChIJX1rSUIx-a4cRsma6yy8LbGEaFAoSCdndZQtzf2uHEer8YPUAKGkCGhQKEgl5V-2Uxn5rhxGyb9-ZIlEb4SIKDW2GlxcVpgFdwQ",
             "directions":{
                 "north" :{
                     "green_time": 45,

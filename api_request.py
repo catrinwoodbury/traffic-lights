@@ -8,3 +8,7 @@ jsonapi =(response.json())
 final = json.dumps(jsonapi, indent = 4)
 
 print(final)
+
+redtime = (jsonapi["destination_addresses"][1])
+
+print(redtime)
