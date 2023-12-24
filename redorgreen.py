@@ -9,7 +9,9 @@ with open("intervals.json") as interval_data:
 
 ## user input time when light turns greem
 ## convert time into datetime
-green_turn = input("Input the time the light turned green in YYYY-MM-DD-HH-MM-SS format: ")
+## green_turn = input("Input the time the light turned green in YYYY-MM-DD-HH-MM-SS format: ")
+testing = (data["intersections"][0]["directions"]["north"]["start_time"])
+green_turn = str(testing)
 year, month, day, hour, minute, second = map(int, green_turn.split('-'))
 green_time = datetime.datetime(year, month, day, hour, minute, second)
 print(green_time)
