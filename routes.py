@@ -7,5 +7,5 @@ import json
 with open("intervals.json") as interval_data:
     data = json.load(interval_data)
     gra = "north"
-green_time = (data["intersections"][0]["directions"][gra]["green_time"])
+green_time = (data["intersections"][0]["directions"]["north"]["green_time"])
 print(green_time)

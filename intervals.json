@@ -5,9 +5,9 @@
             "place_id": "EjlTIFdhZHN3b3J0aCBCbHZkICYgVyBCb3dsZXMgQXZlLCBDb2x1bWJpbmUsIENPIDgwMTIzLCBVU0EiZiJkChQKEglVtBI2G39rhxHJKFzsf_AfzxIUChIJVbQSNht_a4cRyShc7H_wH88aFAoSCdndZQtzf2uHEer8YPUAKGkCGhQKEgkre2l-A39rhxEz5kflsA0xxCIKDV7zmxcVrFpcwQ",
             "directions":{
                 "north" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time": "2023-12-13-4-45-00"
+                    "green_time": 30,
+                    "red_time": 15,
+                    "start_time": "2023-12-25-6-20-00"
                 },
                 "east" :{
                     "green_time": 45,
