@@ -3,9 +3,39 @@ import time
 from datetime import timedelta
 import math
 import json
+import requests
+from googlemaps import convert
+
+with open("api_key.json") as api:
+    authent = json.load(api)
+api_key = str(authent["api_key"])
 
 with open("intervals.json") as interval_data:
     data = json.load(interval_data)
+
+
+url = "https://maps.googleapis.com/maps/api/distancematrix/json"
+
+olat = (data["intersections"][0]["lat"])
+olng = (data["intersections"][0]["lng"])
+
+dlat = (data["intersections"][1]["lat"])
+dlng = (data["intersections"][1]["lng"])
+
+origin = {"lat": olat, "lng": olng}
+destination = {"lat":dlat, "lng": dlng}
+
+parameters = {"origins": convert.location_list(origin), "destinations": convert.location_list(destination), "departure_time": 1704115851, "key": api_key}
+
+response = requests.get(url, params=parameters)
+
+jsonapi =(response.json())
+
+final = json.dumps(jsonapi, indent = 4)
+
+light_to_light = (jsonapi["rows"][0]["elements"][0]["duration"]["value"])
+
+
 
 ## use json file to format time when light turns greem
 ## convert time into datetime
@@ -13,7 +43,7 @@ testing = (data["intersections"][0]["directions"]["north"]["start_time"])
 green_turn = str(testing)
 year, month, day, hour, minute, second = map(int, green_turn.split('-'))
 green_time = datetime.datetime(year, month, day, hour, minute, second)
-print(green_time)
+
 
 ## user input desired arrival time
 ## convert time into datetime
@@ -21,19 +51,18 @@ print(green_time)
 arrival_time = input("Input your desired arrival time in YYYY-MM-DD-HH-MM-SS format: ")
 year, month, day, hour, minute, second = map(int, arrival_time.split('-'))
 turn_time = datetime.datetime(year, month, day, hour, minute, second)
-print(turn_time)
+
+light_time = (turn_time) - datetime.timedelta(seconds = light_to_light)
 
 ## subtract the arrival time from the turn time
-between_time = (turn_time) - (green_time)
-print(between_time)
+between_time = (light_time) - (green_time)
 
 ## convert time inbetween to seconds
 totaltime = timedelta.total_seconds(between_time)
-print(totaltime)
 
 ## how long the light is red/green for
-greentime = (data["intersections"][0]["directions"]["north"]["green_time"])
-redtime = (data["intersections"][0]["directions"]["north"]["red_time"])
+greentime = (data["intersections"][1]["directions"]["north"]["green_time"])
+redtime = (data["intersections"][1]["directions"]["north"]["red_time"])
 
 
 ## the amount of time inbetween the time when the light turned green and the arrival at the light
