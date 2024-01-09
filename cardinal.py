@@ -1,21 +1,16 @@
 import math
 
-destination_x = 39.579280
-origin_x = 39.580670 
-destination_y = -105.072787
-origin_y = -105.070955
+destination_x =   39.6044273 
+origin_x = 39.575384 
+destination_y =  -105.0725764  
+origin_y = -105.0620071 
 
-P1X= (40.716366666666666,-73.91161666666666)
-P2 =(40.716483333333336, -73.91175)
     
-angle = math.atan2((-73.91175-(-73.911616)),(40.716483-40.71636))
-
-degree = math.degrees(angle)
-
-cardinal_degree = 90 - (degree)
-
-if cardinal_degree >= 0:
-    print("north")
+cardinal_degree = (math.degrees(math.atan2(((destination_y)-(origin_y)),((destination_x)-(origin_x)))))
 
 
-print(cardinal_degree)
+if cardinal_degree < 0:
+    new_degree = cardinal_degree + 360
+    print(new_degree)
+else:
+    print(cardinal_degree)
