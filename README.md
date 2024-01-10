@@ -25,4 +25,5 @@ let routes = response.rows[0].elements;
           alert("The closest location is " + closest + " (" + drivetime + ")");
 
 
-#### FIGURE OUT CURL
+###for each lat long calc distance from poly line
+if distance is less than (a value) add lat long to waypoints array

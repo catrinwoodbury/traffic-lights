@@ -33,7 +33,7 @@ origin = {"lat": olat, "lng": olng}
 destination = {"lat":dlat, "lng": dlng}
 
 ###DIRECTIONS
-parameters_directions = {"origins": starting_point, "destinations": end_point,  "arrival_time": convert.time(time_arrival), "key": api_key}
+parameters_directions = {"origin": starting_point, "destination": end_point,  "arrival_time": convert.time(time_arrival), "key": api_key}
 response_directions = requests.get(url_directions, params=parameters_directions)
 json_directions = (response_directions.json())
 final_directions = json.dumps(json_directions, indent = 4)
@@ -46,6 +46,49 @@ response = requests.get(url_distance, params=parameters)
 jsonapi =(response.json())
 final = json.dumps(jsonapi, indent = 4)
 light_to_light = (jsonapi["rows"][0]["elements"][0]["duration"]["value"])
+
+
+### Determine Cardinal Degree of Direction1
+destination_x =   39.6047322 
+origin_x = 39.6044273 
+destination_y = -105.0737276
+origin_y = -105.0725764
+
+cardinal_degree = (math.degrees(math.atan2(((destination_y)-(origin_y)),((destination_x)-(origin_x)))))
+if cardinal_degree < 0:
+    cardinal_degree = cardinal_degree + 360
+    print(cardinal_degree)
+else:
+    print(cardinal_degree)
+
+if 337.5 <= cardinal_degree <= 360:
+    cdirection = "North"
+    print(cdirection)
+if 0 <= cardinal_degree < 22.5:
+    cdirection = "North"
+    print(cdirection)
+if 22.5 <= cardinal_degree < 67.5:
+    cdirection = "North-East"
+    print(cdirection)
+if 67.5 <= cardinal_degree < 112.5:
+    cdirection = "East"
+    print(cdirection)
+if 112.5 <= cardinal_degree < 157.5:
+    cdirection = "South-East"
+    print(cdirection)
+if 157.5 <= cardinal_degree < 202.5:
+    cdirection = "South"
+    print(cdirection)
+if 202.5 <= cardinal_degree < 247.5:
+    cdirection = "South-West"
+    print(cdirection)
+if 247.5 <= cardinal_degree < 292.5:
+    cdirection = "West"
+    print(cdirection)
+if 292.5 <= cardinal_degree < 337.5:
+    cdirection = "North-West"
+    print(cdirection)
+
 
 
 
