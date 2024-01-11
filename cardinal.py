@@ -4,6 +4,7 @@ from datetime import timedelta
 import json
 import requests
 from googlemaps import convert
+from numpy import arctan2,random,sin,cos,degrees
 
 destination_x =   39.6047322 
 origin_y = -105.0725764
@@ -50,30 +51,34 @@ start_lng = (json_directions["routes"][0]["legs"][0]["steps"][i]["start_location
 print("start lng:", start_lng)
 
 
-cardinal_degree = (math.degrees(math.atan2(((end_lng)-(start_lng)),((end_lat)-(start_lat)))))
+    
+dL = (end_lng)-(start_lng)
+X = cos(end_lat)* sin(dL)
+Y = cos(start_lat)*sin(end_lat) - sin(start_lat)*cos(end_lat)* cos(dL)
+bearing = arctan2(X,Y)
+result = ((degrees(bearing) + 360) % 360)
 
+print(result)
 
-if cardinal_degree < 0:
-    cardinal_degree = cardinal_degree + 360
-    print(cardinal_degree)
-else:
-    print(cardinal_degree)
-
-if 337.5 <= cardinal_degree <= 360:
+if 337.5 <= result <= 360:
     print("North")
-if 0 <= cardinal_degree < 22.5:
+if 0 <= result < 22.5:
     print("North")
-if 22.5 <= cardinal_degree < 67.5:
+if 22.5 <= result < 67.5:
     print("North-East")
-if 67.5 <= cardinal_degree < 112.5:
+if 67.5 <= result < 112.5:
     print("East")
-if 112.5 <= cardinal_degree < 157.5:
+if 112.5 <= result < 157.5:
     print("South-East")
-if 157.5 <= cardinal_degree < 202.5:
+if 157.5 <= result < 202.5:
     print("South")
-if 202.5 <= cardinal_degree < 247.5:
+if 202.5 <= result < 247.5:
     print("South-West")
-if 247.5 <= cardinal_degree < 292.5:
+if 247.5 <= result < 292.5:
     print("West")
-if 292.5 <= cardinal_degree < 337.5:
+if 292.5 <= result < 337.5:
     print("North-West")
+
+
+
+
