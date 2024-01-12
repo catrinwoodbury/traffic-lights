@@ -46,7 +46,6 @@ poly = convert.normalize_lat_lng(decode[0])
 result = convert.normalize_lat_lng(coords)
 
 
-
 print(poly)
 print(result)
 
