@@ -28,7 +28,7 @@
         },
         {
             "name": "coalmine_wadsworth",
-            "lat,lng": "39.595241, -105.091411",
+            "lat,lng": [39.595241, -105.091411],
             "directions":{
                 "north" :{
                     "green_time": 45,
@@ -54,7 +54,7 @@
         },
         {
             "name": "kencaryl_wadsworth",
-            "lat,lng": "39.580697, -105.087082", 
+            "lat,lng": [39.580697, -105.087082], 
             "directions":{
                 "north" :{
                     "green_time": 45,

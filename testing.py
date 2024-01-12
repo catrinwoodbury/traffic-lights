@@ -21,7 +21,7 @@ end_point = "5775 W Canyon Dr, Littleton, CO 80128"
 
 arrival_time = input("Input your desired arrival time in YYYY-MM-DD-HH-MM-SS format: ")
 year, month, day, hour, minute, second = map(int, arrival_time.split('-'))
-time_arrival = datetime.datetime(year, month, day, hour, minute, second)
+#time_arrival = datetime.datetime(year, month, day, hour, minute, second)
 
 
 url_distance = "https://maps.googleapis.com/maps/api/distancematrix/json"
@@ -43,7 +43,12 @@ coords = (data["intersections"][0]["lat,lng"])
 
 poly = convert.normalize_lat_lng(decode[0])
 file = convert.latlng(coords)
-print(poly)
-print(file)
 
-#### explore conver.shortest_path!!!
+file1 = str(file)
+print(file1)
+res = file1.split(', ')
+
+#print(poly)
+print(res)
+
+
