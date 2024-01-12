@@ -2,7 +2,7 @@
     "intersections": [
         {
             "name": "bowles_wadsworth",
-            "lat,lng": "39.609717, -105.091313",
+            "lat,lng": [39.609717, -105.091313],
             "directions":{
                 "north" :{
                     "green_time": 30,

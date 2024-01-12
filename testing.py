@@ -4,7 +4,7 @@ import math
 import json
 import requests
 from googlemaps import convert
-import polyline
+
 
 with open("api_key.json") as api:
     authent = json.load(api)
@@ -21,7 +21,7 @@ end_point = "5775 W Canyon Dr, Littleton, CO 80128"
 
 arrival_time = input("Input your desired arrival time in YYYY-MM-DD-HH-MM-SS format: ")
 year, month, day, hour, minute, second = map(int, arrival_time.split('-'))
-#time_arrival = datetime.datetime(year, month, day, hour, minute, second)
+time_arrival = datetime.datetime(year, month, day, hour, minute, second)
 
 
 url_distance = "https://maps.googleapis.com/maps/api/distancematrix/json"
@@ -37,18 +37,17 @@ final_directions = json.dumps(json_directions, indent = 4)
 
 poly_line = (json_directions["routes"][0]["overview_polyline"]["points"])
 decode = convert.decode_polyline(poly_line)
-#print(decode)
+print(decode)
 
-coords = (data["intersections"][0]["lat,lng"])
+coords = (data["intersections"][1]["lat,lng"])
+file = tuple(coords)
 
 poly = convert.normalize_lat_lng(decode[0])
-file = convert.latlng(coords)
+result = convert.normalize_lat_lng(coords)
 
-file1 = str(file)
-print(file1)
-res = file1.split(', ')
 
-#print(poly)
-print(res)
+
+print(poly)
+print(result)
 
 
