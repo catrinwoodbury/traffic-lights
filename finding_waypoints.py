@@ -16,7 +16,7 @@ f = open('intervals.json', "r")
 # Reading from file
 data = json.loads(f.read())
  
-starting_point = "8286 S Wadsworth Blvd, Littleton, CO 80128"
+starting_point = "7179 S Cody Way, Littleton, CO 80128"
 end_point = "5375 S Wadsworth Blvd, Lakewood, CO 80123"
 
 arrival_time = input("Input your desired arrival time in YYYY-MM-DD-HH-MM-SS format: ")
