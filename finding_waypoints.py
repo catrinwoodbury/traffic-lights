@@ -69,18 +69,21 @@ for v in waypoints:
     response_roads = requests.get(url_roads, params=parameters_roads)
     json_roads = (response_roads.json())
     final_roads = json.dumps(json_roads, indent = 4)
-    print(final_roads)
-    
-#print(waypoints)    
-#parameters_directions = {"origin": starting_point,
-                        #"destination": end_point,  
-                        #"arrival_time": convert.time(time_arrival),
-                        #"waypoints": "optimize:true|" + convert.location_list(waypoints), 
-                        #"key": api_key}
-#response_directions = requests.get(url_directions, params=parameters_directions)
-#json_directions = (response_directions.json())
-#final_directions = json.dumps(json_directions, indent = 4)
-#print(final_directions)
+    roadId = json.loads(final_roads)
+    Ids = [id["placeId"] for id in roadId["snappedPoints"]]
+    placeid = "placeid:", Ids
+    place_waypoints.append(placeid)
+print(final_roads)
+
+parameters_directions = {"origin": starting_point,
+                        "destination": end_point,  
+                        "arrival_time": convert.time(time_arrival),
+                        "waypoints": "optimize:true|" + str(place_waypoints), 
+                        "key": api_key}
+response_directions = requests.get(url_directions, params=parameters_directions)
+json_directions = (response_directions.json())
+final_directions = json.dumps(json_directions, indent = 4)
+print(final_directions)
 
 ## closing file
 f.close()

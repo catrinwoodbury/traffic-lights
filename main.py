@@ -12,8 +12,11 @@ api_key = str(authent["api_key"])
 with open("intervals.json") as interval_data:
     data = json.load(interval_data)
 
-starting_point = input("Enter the address of the starting location:\n")
-end_point = input("Enter the address of your destination:\n")
+#starting_point = input("Enter the address of the starting location:\n")
+#end_point = input("Enter the address of your destination:\n")
+
+starting_point = "7179 S Cody Way, Littleton, CO 80128"
+end_point = "5375 S Wadsworth Blvd, Lakewood, CO 80123"
 
 arrival_time = input("Input your desired arrival time in YYYY-MM-DD-HH-MM-SS format: ")
 year, month, day, hour, minute, second = map(int, arrival_time.split('-'))
@@ -23,17 +26,14 @@ time_arrival = datetime.datetime(year, month, day, hour, minute, second)
 url_distance = "https://maps.googleapis.com/maps/api/distancematrix/json"
 url_directions = "https://maps.googleapis.com/maps/api/directions/json"
 
-olat = (data["intersections"][0]["lat"])
-olng = (data["intersections"][0]["lng"])
 
-dlat = (data["intersections"][1]["lat"])
-dlng = (data["intersections"][1]["lng"])
-
-origin = {"lat": olat, "lng": olng}
-destination = {"lat":dlat, "lng": dlng}
-
+waypoints = [(39.60971159889172, -105.09142031890865)]
 ###DIRECTIONS
-parameters_directions = {"origin": starting_point, "destination": end_point,  "arrival_time": convert.time(time_arrival), "key": api_key}
+parameters_directions = {"origin": starting_point, 
+                         "destination": end_point,  
+                         "arrival_time": convert.time(time_arrival),
+                         "waypoints": "optimize:true|" + convert.location_list(waypoints),
+                         "key": api_key}
 response_directions = requests.get(url_directions, params=parameters_directions)
 json_directions = (response_directions.json())
 final_directions = json.dumps(json_directions, indent = 4)
@@ -88,8 +88,6 @@ if 247.5 <= cardinal_degree < 292.5:
 if 292.5 <= cardinal_degree < 337.5:
     cdirection = "North-West"
     print(cdirection)
-
-
 
 
 ## use json file to format time when light turns greem
