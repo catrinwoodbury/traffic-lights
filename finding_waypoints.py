@@ -5,7 +5,7 @@ import requests
 from googlemaps import convert
 ## radius of the earth in km
 wp = []
-
+place_waypoints = []
 R = 6373.0
 
 with open("api_key.json") as api:
@@ -26,9 +26,13 @@ time_arrival = datetime.datetime(year, month, day, hour, minute, second)
 
 url_distance = "https://maps.googleapis.com/maps/api/distancematrix/json"
 url_directions = "https://maps.googleapis.com/maps/api/directions/json"
+url_roads = "https://roads.googleapis.com/v1/snapToRoads"
 
 ###DIRECTIONS
-parameters_directions = {"origin": starting_point, "destination": end_point,  "arrival_time": convert.time(time_arrival), "key": api_key}
+parameters_directions = {"origin": starting_point,
+                        "destination": end_point,  
+                        "arrival_time": convert.time(time_arrival), 
+                        "key": api_key}
 response_directions = requests.get(url_directions, params=parameters_directions)
 json_directions = (response_directions.json())
 final_directions = json.dumps(json_directions, indent = 4)
@@ -55,9 +59,28 @@ for i in coords:
         distance = R * c
         ## convert to feet
         final = distance * 3280.84
-        if final < 400:
+        if final <= 400:
             wp.append(result)
             waypoints = list(set(wp))
-            print(waypoints)    
+for v in waypoints:
+    parameters_roads = {"path": convert.location_list(v),
+                        "interpolate": True,
+                        "key": api_key}
+    response_roads = requests.get(url_roads, params=parameters_roads)
+    json_roads = (response_roads.json())
+    final_roads = json.dumps(json_roads, indent = 4)
+    print(final_roads)
+    
+#print(waypoints)    
+#parameters_directions = {"origin": starting_point,
+                        #"destination": end_point,  
+                        #"arrival_time": convert.time(time_arrival),
+                        #"waypoints": "optimize:true|" + convert.location_list(waypoints), 
+                        #"key": api_key}
+#response_directions = requests.get(url_directions, params=parameters_directions)
+#json_directions = (response_directions.json())
+#final_directions = json.dumps(json_directions, indent = 4)
+#print(final_directions)
+
 ## closing file
 f.close()
