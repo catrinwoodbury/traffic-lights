@@ -75,11 +75,12 @@ for i in coords:
             waypoints = list(set(wp))
 print(waypoints)    
 
+optimize = "optimize:true|"
 ## calculate directions between the origin and destination through the way points
 parameters_directions = {"origin": starting_point,
                         "destination": end_point,  
                         "arrival_time": convert.time(time_arrival),
-                        "waypoints": "optimize:true|" + convert.location_list(waypoints),
+                        "waypoints": convert.location_list(waypoints),
                         "key": api_key}
 response_directions = requests.get(url_directions, params=parameters_directions)
 json_directions = (response_directions.json())
