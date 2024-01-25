@@ -88,8 +88,8 @@ long_2 = radians(int(start_loc[1]))
 
 for l in waypoints: 
     light = convert.normalize_lat_lng(l)
-    lat_1 = radians(int(light[0]))
-    long_1 = radians(int(light[1]))
+    lat_1 = radians(float(light[0]))
+    long_1 = radians(float(light[1]))
 ## calculates the distance between the intersection and polyline
     dlon = long_2 - long_1
     dlat = lat_2 - lat_1
