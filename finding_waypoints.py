@@ -7,7 +7,7 @@ from googlemaps import convert
 wp = []
 place_waypoints = []
 R = 6373.0
-
+dist =[]
 ## opens and grabs the api key
 with open("api_key.json") as api:
     authent = json.load(api)
@@ -100,7 +100,16 @@ for l in waypoints:
     final = distance * 3280.84
     ## if the distance is less than or equal to 500 feet
     ## add the lat long coords to the waypoints list
-    print(distance)
+    dist.append(final)
+    distances = list(set(dist))
+    distances.sort
+    print(distances)
+for i in distances:
+    index = distances.index(i)   
+    print(index) 
+
+
+
 
 optimize = "optimize:true|"
 ## calculate directions between the origin and destination through the way points
