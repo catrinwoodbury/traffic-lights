@@ -78,16 +78,18 @@ print(waypoints)
 
 ## format: string
 start_loc = convert.latlng(json_directions["routes"][0]["legs"][0]["start_location"])
+print(type(start_loc))
 
-location = convert.join_list(start_loc)
+location = start_loc.split()
 print(location)
+
+lat_2 = radians(int(start_loc[0]))
+long_2 = radians(int(start_loc[1]))
 
 for l in waypoints: 
     light = convert.normalize_lat_lng(l)
-    lat_1 = radians(light[0])
-    long_1 = radians(light[1])
-    lat_2 = radians(start_loc[0])
-    long_2 = radians(start_loc[1])
+    lat_1 = radians(int(light[0]))
+    long_1 = radians(int(light[1]))
 ## calculates the distance between the intersection and polyline
     dlon = long_2 - long_1
     dlat = lat_2 - lat_1
@@ -98,7 +100,7 @@ for l in waypoints:
     final = distance * 3280.84
     ## if the distance is less than or equal to 500 feet
     ## add the lat long coords to the waypoints list
-    print(final)
+    print(distance)
 
 optimize = "optimize:true|"
 ## calculate directions between the origin and destination through the way points
@@ -110,7 +112,7 @@ parameters_directions = {"origin": starting_point,
 response_directions = requests.get(url_directions, params=parameters_directions)
 json_directions = (response_directions.json())
 final_directions = json.dumps(json_directions, indent = 4)
-print(final_directions)
+#print(final_directions)
 
 ## closing file
 f.close()
