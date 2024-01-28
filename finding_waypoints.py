@@ -6,7 +6,7 @@ from googlemaps import convert
 ## radius of the earth in km
 wp = []
 place_waypoints = []
-R = 6373.0
+R = 3959.87433
 dist =[]
 ## opens and grabs the api key
 with open("api_key.json") as api:
@@ -18,8 +18,8 @@ f = open('intervals.json', "r")
 data = json.loads(f.read())
  
 ## start and end locations
-starting_point = "8420 W Ken Caryl Ave, Littleton, CO 80128"
-end_point = "5375 S Wadsworth Blvd, Lakewood, CO 80123"
+starting_point = "8126 S Wadsworth Blvd, Littleton, CO 80128"
+end_point = "5660 W Coal Mine Ave, Littleton, CO 80128"
 
 ## desired arrival time
 arrival_time = input("Input your desired arrival time in YYYY-MM-DD-HH-MM-SS format: ")
@@ -52,14 +52,14 @@ for i in coords:
     file = tuple(i)
     result = convert.normalize_lat_lng(file)
     ## breaks tuple into specific lat long coords
-    lat1 = radians(result[0])
-    long1 = radians(result[1])
+    lat2 = radians(result[0])
+    long2 = radians(result[1])
 
     ## for each lat long coord in the polyline
     for s in decode:
         end = convert.normalize_lat_lng(s)
-        lat2 = radians(end[0])
-        long2 = radians(end[1])
+        lat1 = radians(end[0])
+        long1 = radians(end[1])
         ## calculates the distance between the intersection and polyline
         dlon = long2 - long1
         dlat = lat2 - lat1
@@ -67,7 +67,7 @@ for i in coords:
         c = 2 * atan2(sqrt(a), sqrt(1 - a))
         distance = R * c
         ## convert to feet
-        final = distance * 3280.84
+        final = distance * 5280
         ## if the distance is less than or equal to 500 feet
         ## add the lat long coords to the waypoints list
         if final <= 500:
@@ -96,17 +96,18 @@ for l in waypoints:
     a = sin(dlat / 2)**2 + cos(lat_1) * cos(lat_2) * sin(dlon / 2)**2
     c = 2 * atan2(sqrt(a), sqrt(1 - a))
     distance = R * c
-    ## convert to feet
-    final = distance * 3280.84
-    ## if the distance is less than or equal to 500 feet
-    ## add the lat long coords to the waypoints list
+    final = distance * 5280
+    ## add the distance from start to the list
     dist.append(final)
     distances = list(set(dist))
-    distances.sort
+    ## sort the list based on which point is the closest to the start
     print(distances)
-for i in distances:
-    index = distances.index(i)   
-    print(index) 
+sort = sorted(range(len(distances)), key=lambda k: distances[k])
+print(sort)
+ 
+waypoints = [waypoints[i] for i in sort]
+print("Waypoints: ", waypoints )
+
 
 
 
@@ -116,12 +117,12 @@ optimize = "optimize:true|"
 parameters_directions = {"origin": starting_point,
                         "destination": end_point,  
                         "arrival_time": convert.time(time_arrival),
-                        "waypoints": convert.location_list(waypoints),
+                        "waypoints": optimize + convert.location_list(waypoints),
                         "key": api_key}
 response_directions = requests.get(url_directions, params=parameters_directions)
 json_directions = (response_directions.json())
 final_directions = json.dumps(json_directions, indent = 4)
-#print(final_directions)
+print(final_directions)
 
 ## closing file
 f.close()
