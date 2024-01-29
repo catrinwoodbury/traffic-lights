@@ -18,8 +18,8 @@ f = open('intervals.json', "r")
 data = json.loads(f.read())
  
 ## start and end locations
-starting_point = "8537 S Reed St, Littleton, CO 80128"
-end_point = "7900 W Quincy Ave, Littleton, CO 80123"
+starting_point = "8489 S Upham Way, Littleton, CO 80128"
+end_point = "4887 S Wadsworth Wy #100, Littleton, CO 80123"
 
 ## desired arrival time
 arrival_time = input("Input your desired arrival time in YYYY-MM-DD-HH-MM-SS format: ")
@@ -79,7 +79,6 @@ print(waypoints)
 
 ## format: string
 start_loc = convert.latlng(json_directions["routes"][0]["legs"][0]["start_location"])
-print(type(start_loc))
 
 location = start_loc.split()
 print(location)
