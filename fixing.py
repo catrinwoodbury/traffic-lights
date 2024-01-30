@@ -44,6 +44,8 @@ json_directions = (response_directions.json())
 final_directions = json.dumps(json_directions, indent = 4)
 print(final_directions)
 
+
+
 ## gets the polyline and decodes it from the final directions
 poly_line = (json_directions["routes"][0]["overview_polyline"]["points"])
 decode = convert.decode_polyline(poly_line)
@@ -79,14 +81,20 @@ for i in coords:
             waypoints = list(set(wp))
 print(waypoints)    
 
-start_loc = convert.latlng(json_directions["routes"][0]["legs"][0]["start_location"])
-print(type(start_loc))
 
-location = start_loc.split()
+start_locat = convert.latlng(json_directions["routes"][0]["legs"][0]["start_location"])
+location = start_locat.split()
 print(location)
 
-lat_2 = radians(float(start_loc[0]))
-long_2 = radians(float(start_loc[1]))
+end_loc = convert.latlng(convert.normalize_lat_lng(json_directions["routes"][0]["legs"][0]["end_location"]))
+wp.append(end_loc)
+start_loc = convert.latlng(convert.normalize_lat_lng(json_directions["routes"][0]["legs"][0]["start_location"]))
+wp.append(start_loc)
+waypoints = list(set(wp))
+print(waypoints)
+
+lat_2 = radians(float(location[0]))
+long_2 = radians(float(location[1]))
 
 for s in waypoints: 
     end = convert.normalize_lat_lng(s)
