@@ -10,7 +10,7 @@ with open("api_key.json") as api:
     authent = json.load(api)
 api_key = str(authent["api_key"])
 
-routes_url = "https://routes.googleapis.com/directions/v2:computeRoutes"
+routes_url = "https://routes.googleapis.com/directions/v2:computeRoutes/json?"
 
 starting_point = "5795 W Canyon Dr, Littleton, CO 80128"
 end_point = "6201 S Pierce St, Littleton, CO 80123"
@@ -28,6 +28,7 @@ parameters_directions = {"origin": starting_point,
                         "arrivalTime": convert.time(time_arrival),
                         "key": api_key}
 response_directions = requests.get(routes_url, params=parameters_directions)
+print(response_directions)
 json_directions = (response_directions.json())
 final_directions = json.dumps(json_directions, indent = 4)
 print(final_directions)
