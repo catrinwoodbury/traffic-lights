@@ -1,10 +1,11 @@
 import datetime
-from math import sin, cos, sqrt, atan2, radians, acos
+from math import sin, cos, sqrt, atan2, radians, acos, arctan2 
 import json
 import requests
 from googlemaps import convert
 from datetime import timedelta
 import math
+from numpy import arctan2,random,sin,cos,degrees
 
 ## radius of the earth in miles
 Rad = 3959.87433
@@ -131,14 +132,16 @@ print(wp)
 ## final_value gives the index of the final value in the list
 final_value = len(wp) - 1
 
+current_time = time_arrival
+
 while final_value >= 0:
     final_point = convert.latlng(wp[final_value])
     print(final_point)
-    end_point = convert.latlng(wp[final_value - 1])
+    light_point = convert.latlng(wp[final_value - 1])
     ## calc distance between end point and the lights
-    parameters_distance1 = {"origins": final_point,
-                        "destinations": end_point,  
-                        "arrival_time": convert.time(time_arrival), 
+    parameters_distance1 = {"origins": light_point,
+                        "destinations": final_point,  
+                        "arrival_time": convert.time(current_time), 
                         "key": api_key}
     response_directions = requests.get(url_distance, params=parameters_distance1)
     json_directions = (response_directions.json())
@@ -148,130 +151,77 @@ while final_value >= 0:
     ## format the time inbetween in datetime format
     time = datetime.timedelta(seconds = json_directions["rows"][0]["elements"][0]["duration"]["value"])
     print(time)
-    current_time = current_time - time
-    final_value -= 1
-
-
-
-
-## use json file to format time when light turns greem
-## convert time into datetime
-testing = (data["intersections"][0]["directions"]["north"]["start_time"])
-green_turn = str(testing)
-year, month, day, hour, minute, second = map(int, green_turn.split('-'))
-green_time = datetime.datetime(year, month, day, hour, minute, second)
-
-## user input desired arrival time
-## convert time into datetime
-
-light_time = (time_arrival) - datetime.timedelta(seconds = time)
-
-## subtract the arrival time from the turn time
-between_time = (light_time) - (green_time)
-
-## convert time inbetween to seconds
-totaltime = timedelta.total_seconds(between_time)
-
-current_time = light_time
-
-## how long the light is red/green for
-greentime = (data["intersections"][1]["directions"]["north"]["green_time"])
-redtime = (data["intersections"][1]["directions"]["north"]["red_time"])
-
-## the amount of time inbetween the time when the light turned green and the arrival at the light
-
-## how many seconds the light takes to run one cycle
-cycletime = greentime + redtime
-
-## the number of cycles the light completes in the time between 
-## when the light turned green and the arrival at the light
-rawnum = totaltime / cycletime
-
-## the number of complete cycles that can be run in that time
-truncated_value = math.floor(rawnum)
-
-## the decimal of the number of incomplete cycles that can be run in that time
-leftover = rawnum - truncated_value
-
-## the number of seconds into the new cycle the light is
-partialcycle = leftover * cycletime
-
-## determines if light is red or green and tells user how much longer the light will be red or green for
-if partialcycle <= greentime:
-    timetochange = round(greentime - partialcycle, 3)
-    print( "The light will be GREEN for", timetochange, "more seconds.")
-else:
-    timeinred = partialcycle - greentime
-    redleft = round(redtime - timeinred, 3)
-    print("The light will be RED for", redleft, "more seconds.")
-    current_time = light_time - datetime.timedelta(seconds = redleft)
+    ## update the running time by subtracting the arrival time from the inbetween time
+    current_time = time_arrival - time
     print(current_time)
-
-
-list_value = final_value - 1
-
-while list_value >= 0:
-    light = convert.latlng(wp[list_value])
-    origin = convert.latlng(wp[list_value + 1])
-    parameters_distance1 = {"origins": origin,
-                        "destinations": light,  
-                        "arrival_time": convert.time(time_arrival), 
-                        "key": api_key}
-    response_directions = requests.get(url_distance, params=parameters_distance1)
-    json_directions = (response_directions.json())
-    final_directions = json.dumps(json_directions, indent = 4)
-    
-end_light = convert.latlng(wp[0])
-parameters_distance2 = {"origins": end_light,
-                        "destinations": end_point,  
-                        "arrival_time": convert.time(time_arrival), 
-                        "key": api_key}
-response_directions2 = requests.get(url_distance, params=parameters_distance1)
-json_directions2 = (response_directions.json())
-final_directions2 = json.dumps(json_directions, indent = 4)
-time2 = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
-print(time2)
-
-
-i = 1
-end_lat = (json_directions["routes"][0]["legs"][0]["steps"][(i+1)]["end_location"]["lat"])  
-print("end lat:", end_lat)               
-end_lng = (json_directions["routes"][0]["legs"][0]["steps"][(i+1)]["end_location"]["lng"])
-print("end lng:", end_lng)
-start_lat = (json_directions["routes"][0]["legs"][0]["steps"][i]["start_location"]["lat"])
-print("start lat:", start_lat)
-start_lng = (json_directions["routes"][0]["legs"][0]["steps"][i]["start_location"]["lng"])     
-print("start lng:", start_lng)
-
+    ## get lat long values to calc cardinal directions
+    cardinal_end_lat = (wp[final_value][0])
+    cardinal_end_long = (wp[final_value][1])
+    cardinal_start_lat = (wp[final_value - 1][0])
+    cardinal_start_long = (wp[final_value -1][1])
+    dL = (cardinal_end_long)-(cardinal_start_long)
+    X = cos(cardinal_end_lat)* sin(dL)
+    Y = cos(cardinal_start_lat)*sin(cardinal_end_lat) - sin(cardinal_start_lat)*cos(cardinal_end_lat)* cos(dL)
+    bearing = arctan2(X,Y)
+    result = ((degrees(bearing) + 360) % 360)
+    print(result)
+    if 337.5 <= result <= 360:
+        print("North")
+    if 0 <= result < 22.5:
+        print("North")
+    if 22.5 <= result < 67.5:
+        print("North-East")
+    if 67.5 <= result < 112.5:
+        print("East")
+    if 112.5 <= result < 157.5:
+        print("South-East")
+    if 157.5 <= result < 202.5:
+        print("South")
+    if 202.5 <= result < 247.5:
+        print("South-West")
+    if 247.5 <= result < 292.5:
+        print("West")
+    if 292.5 <= result < 337.5:
+        print("North-West")
 
     
-dL = (end_lng)-(start_lng)
-X = cos(end_lat)* sin(dL)
-Y = cos(start_lat)*sin(end_lat) - sin(start_lat)*cos(end_lat)* cos(dL)
-bearing = arctan2(X,Y)
-result = ((degrees(bearing) + 360) % 360)
+    ## use json file to format time when light turns greem
+    ## convert time into datetime
+    testing = (data["intersections"][0]["directions"]["north"]["start_time"])
+    green_turn = str(testing)
+    year, month, day, hour, minute, second = map(int, green_turn.split('-'))
+    green_time = datetime.datetime(year, month, day, hour, minute, second)
 
-print(result)
+    light_time = (time_arrival) - datetime.timedelta(seconds = time)
+    ## subtract the arrival time from the turn time
+    between_time = (light_time) - (green_time)
+    ## convert time inbetween to seconds
+    totaltime = timedelta.total_seconds(between_time)
+    current_time = light_time
+    ## how long the light is red/green for
+    greentime = (data["intersections"][1]["directions"]["north"]["green_time"])
+    redtime = (data["intersections"][1]["directions"]["north"]["red_time"])
+    ## the amount of time inbetween the time when the light turned green and the arrival at the light
+    ## how many seconds the light takes to run one cycle
+    cycletime = greentime + redtime
+    ## the number of cycles the light completes in the time between 
+    ## when the light turned green and the arrival at the light
+    rawnum = totaltime / cycletime
+    ## the number of complete cycles that can be run in that time
+    truncated_value = math.floor(rawnum)
+    ## the decimal of the number of incomplete cycles that can be run in that time
+    leftover = rawnum - truncated_value
+    ## the number of seconds into the new cycle the light is
+    partialcycle = leftover * cycletime
+    ## determines if light is red or green and tells user how much longer the light will be red or green for
+    if partialcycle <= greentime:
+        timetochange = round(greentime - partialcycle, 3)
+        print( "The light will be GREEN for", timetochange, "more seconds.")
+    else:
+        timeinred = partialcycle - greentime
+        redleft = round(redtime - timeinred, 3)
+        print("The light will be RED for", redleft, "more seconds.")
+        current_time = light_time - datetime.timedelta(seconds = redleft)
+        print(current_time)
 
-if 337.5 <= result <= 360:
-    print("North")
-if 0 <= result < 22.5:
-    print("North")
-if 22.5 <= result < 67.5:
-    print("North-East")
-if 67.5 <= result < 112.5:
-    print("East")
-if 112.5 <= result < 157.5:
-    print("South-East")
-if 157.5 <= result < 202.5:
-    print("South")
-if 202.5 <= result < 247.5:
-    print("South-West")
-if 247.5 <= result < 292.5:
-    print("West")
-if 292.5 <= result < 337.5:
-    print("North-West")
-
-
-
-
+    final_value -= 1
