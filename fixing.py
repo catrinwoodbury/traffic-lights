@@ -231,3 +231,47 @@ json_directions2 = (response_directions.json())
 final_directions2 = json.dumps(json_directions, indent = 4)
 time2 = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
 print(time2)
+
+
+i = 1
+end_lat = (json_directions["routes"][0]["legs"][0]["steps"][(i+1)]["end_location"]["lat"])  
+print("end lat:", end_lat)               
+end_lng = (json_directions["routes"][0]["legs"][0]["steps"][(i+1)]["end_location"]["lng"])
+print("end lng:", end_lng)
+start_lat = (json_directions["routes"][0]["legs"][0]["steps"][i]["start_location"]["lat"])
+print("start lat:", start_lat)
+start_lng = (json_directions["routes"][0]["legs"][0]["steps"][i]["start_location"]["lng"])     
+print("start lng:", start_lng)
+
+
+    
+dL = (end_lng)-(start_lng)
+X = cos(end_lat)* sin(dL)
+Y = cos(start_lat)*sin(end_lat) - sin(start_lat)*cos(end_lat)* cos(dL)
+bearing = arctan2(X,Y)
+result = ((degrees(bearing) + 360) % 360)
+
+print(result)
+
+if 337.5 <= result <= 360:
+    print("North")
+if 0 <= result < 22.5:
+    print("North")
+if 22.5 <= result < 67.5:
+    print("North-East")
+if 67.5 <= result < 112.5:
+    print("East")
+if 112.5 <= result < 157.5:
+    print("South-East")
+if 157.5 <= result < 202.5:
+    print("South")
+if 202.5 <= result < 247.5:
+    print("South-West")
+if 247.5 <= result < 292.5:
+    print("West")
+if 292.5 <= result < 337.5:
+    print("North-West")
+
+
+
+
