@@ -26,8 +26,8 @@ f = open('intervals.json', "r")
 data = json.loads(f.read())
  
 ## start and end locations
-starting_point = "8126 S Wadsworth Blvd, Littleton, CO 80128"
-end_point = "5375 S Wadsworth Blvd, Lakewood, CO 80123"
+starting_point = "5375 S Wadsworth Blvd, Lakewood, CO 80123 "
+end_point = "8126 S Wadsworth Blvd, Littleton, CO 80128"
 
 ## desired arrival time
 arrival_time = input("Input your desired arrival time in YYYY-MM-DD-HH-MM-SS format: ")
@@ -128,9 +128,10 @@ print(wp)
 ## final_value gives the index of the final value in the list
 ## subtracted by 2 because the end point from the last light to the end location will not have a light
 final_value = len(wp) - 2
+print("final value: ", final_value)
 
 
-while final_value >= 1:
+while final_value:
     final_point = convert.latlng(wp[final_value])
     light_point = convert.latlng(wp[final_value - 1])
     ## calc distance between end point and the lights
@@ -360,7 +361,7 @@ while final_value >= 1:
     ## use json file to format time when light turns greem
     ## convert time into datetime
     final_value -= 1
-    if final_value <= 1:
+    if final_value == 0:
         break
 
 print("Departure time: ", light_time)
