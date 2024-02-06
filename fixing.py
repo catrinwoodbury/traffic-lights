@@ -12,6 +12,9 @@ Rad = 3959.87433
 wp = []
 place_waypoints = []
 dist =[]
+green_count = 0
+red_count = 0
+
 
 ## opens and grabs the api key
 with open("api_key.json") as api:
@@ -44,7 +47,6 @@ parameters_directions = {"origin": starting_point,
 response_directions = requests.get(url_directions, params=parameters_directions)
 json_directions = (response_directions.json())
 final_directions = json.dumps(json_directions, indent = 4)
-print(final_directions)
 
 ## gets the polyline and decodes it from the entire route
 poly_line = (json_directions["routes"][0]["overview_polyline"]["points"])
@@ -80,8 +82,6 @@ for i in coords:
         if final <= 500:
             wp.append(result)
             waypoints = list(set(wp))
-print(waypoints)    
-
 
 ## gets the lat long coords of the start location
 start_loc = (convert.normalize_lat_lng(json_directions["routes"][0]["legs"][0]["start_location"]))
@@ -118,7 +118,6 @@ for s in waypoints:
     ## add the distance from start to the list
     dist.append(final)
     ## sort the list based on which point is the closest to the start
-    print(dist)
 sort = sorted(range(len(dist)), key=lambda k: dist[k])
 print(sort)
 
@@ -127,12 +126,12 @@ wp = [waypoints[i] for i in sort]
 print(wp)
 
 ## final_value gives the index of the final value in the list
-final_value = len(wp) - 1
+## subtracted by 2 because the end point from the last light to the end location will not have a light
+final_value = len(wp) - 2
 
 
 while final_value >= 1:
     final_point = convert.latlng(wp[final_value])
-    print(final_point)
     light_point = convert.latlng(wp[final_value - 1])
     ## calc distance between end point and the lights
     parameters_distance1 = {"origins": light_point,
@@ -145,10 +144,8 @@ while final_value >= 1:
     duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
     ## format the time inbetween in datetime format
     time = datetime.timedelta(seconds = duration)
-    print(time)
     ## update the running time by subtracting the arrival time from the inbetween time
     time_arrival = time_arrival - time
-    print(time_arrival)
     ## get lat long values to calc cardinal directions
     cardinal_end_lat = (wp[final_value][0])
     cardinal_end_long = (wp[final_value][1])
@@ -160,11 +157,11 @@ while final_value >= 1:
     bearing = atan2(X,Y)
     result = ((degrees(bearing) + 360) % 360)
     ## locate which direction for the intersection in the data
-    ## SHOULD NOT BE MINUS TWO SHOULD ACTUALLY BE MINUS ONE, LOOP NEEDS TO BE SET UP
-    sorting = int(sort[final_value - 2])
+    sorting = int(sort[final_value - 1])
     print(sorting)
     if 337.5 <= result <= 360:
         status = "north"
+        print(status)
         testing = (data["intersections"][sorting]["directions"][status]["start_time"])
         green_turn = str(testing)
         year, month, day, hour, minute, second = map(int, green_turn.split('-'))
@@ -192,15 +189,17 @@ while final_value >= 1:
         ## determines if light is red or green and tells user how much longer the light will be red or green for
         if partialcycle <= greentime:
             timetochange = round(greentime - partialcycle, 3)
+            green_count = green_count + 1
             print( "The light will be GREEN for", timetochange, "more seconds.")
         else:
             timeinred = partialcycle - greentime
             redleft = round(redtime - timeinred, 3)
+            red_count = red_count + 1
             print("The light will be RED for", redleft, "more seconds.")
             light_time = light_time - datetime.timedelta(seconds = redleft)
-            print(light_time)
     if 0 <= result < 22.5:
         status = "north"
+        print(status)
         testing = (data["intersections"][sorting]["directions"][status]["start_time"])
         green_turn = str(testing)
         year, month, day, hour, minute, second = map(int, green_turn.split('-'))
@@ -228,17 +227,19 @@ while final_value >= 1:
         ## determines if light is red or green and tells user how much longer the light will be red or green for
         if partialcycle <= greentime:
             timetochange = round(greentime - partialcycle, 3)
+            green_count = green_count + 1
             print( "The light will be GREEN for", timetochange, "more seconds.")
         else:
             timeinred = partialcycle - greentime
             redleft = round(redtime - timeinred, 3)
+            red_count = red_count + 1
             print("The light will be RED for", redleft, "more seconds.")
             light_time = light_time - datetime.timedelta(seconds = redleft)
-            print(light_time)
     if 22.5 <= result < 67.5:
         print("North-East")
     if 67.5 <= result < 112.5:
         status = "east"
+        print(status)
         testing = (data["intersections"][sorting]["directions"][status]["start_time"])
         green_turn = str(testing)
         year, month, day, hour, minute, second = map(int, green_turn.split('-'))
@@ -266,17 +267,19 @@ while final_value >= 1:
         ## determines if light is red or green and tells user how much longer the light will be red or green for
         if partialcycle <= greentime:
             timetochange = round(greentime - partialcycle, 3)
+            green_count = green_count + 1
             print( "The light will be GREEN for", timetochange, "more seconds.")
         else:
             timeinred = partialcycle - greentime
             redleft = round(redtime - timeinred, 3)
+            red_count = red_count + 1
             print("The light will be RED for", redleft, "more seconds.")
             light_time = light_time - datetime.timedelta(seconds = redleft)
-            print(light_time)
     if 112.5 <= result < 157.5:
         print("South-East")
     if 157.5 <= result < 202.5:
         status = "south"
+        print(status)
         testing = (data["intersections"][sorting]["directions"][status]["start_time"])
         green_turn = str(testing)
         year, month, day, hour, minute, second = map(int, green_turn.split('-'))
@@ -304,17 +307,19 @@ while final_value >= 1:
         ## determines if light is red or green and tells user how much longer the light will be red or green for
         if partialcycle <= greentime:
             timetochange = round(greentime - partialcycle, 3)
+            green_count = green_count + 1
             print( "The light will be GREEN for", timetochange, "more seconds.")
         else:
             timeinred = partialcycle - greentime
             redleft = round(redtime - timeinred, 3)
+            red_count = red_count + 1
             print("The light will be RED for", redleft, "more seconds.")
             light_time = light_time - datetime.timedelta(seconds = redleft)
-            print(light_time)
     if 202.5 <= result < 247.5:
         print("South-West")
     if 247.5 <= result < 292.5:
         status = "west"
+        print(status)
         testing = (data["intersections"][sorting]["directions"][status]["start_time"])
         green_turn = str(testing)
         year, month, day, hour, minute, second = map(int, green_turn.split('-'))
@@ -342,15 +347,22 @@ while final_value >= 1:
         ## determines if light is red or green and tells user how much longer the light will be red or green for
         if partialcycle <= greentime:
             timetochange = round(greentime - partialcycle, 3)
+            green_count = green_count + 1
             print( "The light will be GREEN for", timetochange, "more seconds.")
         else:
             timeinred = partialcycle - greentime
             redleft = round(redtime - timeinred, 3)
+            red_count = red_count + 1
             print("The light will be RED for", redleft, "more seconds.")
             light_time = light_time - datetime.timedelta(seconds = redleft)
-            print(light_time)
     if 292.5 <= result < 337.5:
         print("North-West")
     ## use json file to format time when light turns greem
     ## convert time into datetime
     final_value -= 1
+    if final_value <= 1:
+        break
+
+print("Departure time: ", light_time)
+print("You will hit ", green_count, "green lights")
+print("You will hit ",  red_count, "red lights")
