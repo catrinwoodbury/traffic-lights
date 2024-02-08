@@ -1,7 +1,7 @@
 {
     "intersections": [
         {
-            "name": "bowles_wadsworth",
+            "name": "Bowles and Wadsworth",
             "lat,lng": [39.60971159889172,-105.09142031890865],
             "directions":{
                 "north" :{
@@ -27,7 +27,7 @@
             }
         },
         {
-            "name": "coalmine_wadsworth",
+            "name": "Coalmine and Wadsworth",
             "lat,lng": [39.59517540890404,-105.09139250489149],
             "directions":{
                 "north" :{
@@ -53,7 +53,7 @@
             }
         },
         {
-            "name": "kencaryl_wadsworth",
+            "name": "Kencaryl and Wadsworth",
             "lat,lng": [39.58063011413268,-105.08706490264349], 
             "directions":{
                 "north" :{

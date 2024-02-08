@@ -8,7 +8,7 @@ import math
 
 ## radius of the earth in miles
 Rad = 3959.87433
-
+value = 0
 wp = []
 place_waypoints = []
 dist =[]
@@ -26,8 +26,8 @@ f = open('intervals.json', "r")
 data = json.loads(f.read())
  
 ## start and end locations
-starting_point = "5375 S Wadsworth Blvd, Lakewood, CO 80123 "
-end_point = "8126 S Wadsworth Blvd, Littleton, CO 80128"
+starting_point = "9100 W Ken Caryl Ave, Littleton, CO 80128"
+end_point = "5375 S Wadsworth Blvd, Lakewood, CO 80123"
 
 ## desired arrival time
 arrival_time = input("Input your desired arrival time in YYYY-MM-DD-HH-MM-SS format: ")
@@ -82,6 +82,10 @@ for i in coords:
         if final <= 500:
             wp.append(result)
             waypoints = list(set(wp))
+sorting = sorted(range(len(waypoints)), key=lambda k: waypoints[k])
+print(sorting)
+testing = [waypoints[i] for i in sorting]
+print(testing)
 
 ## gets the lat long coords of the start location
 start_loc = (convert.normalize_lat_lng(json_directions["routes"][0]["legs"][0]["start_location"]))
@@ -95,7 +99,6 @@ wp.append(end_loc)
 
 ## make the waypoints list into a list
 waypoints = list(set(wp))
-print(waypoints)
 
 ## breaks the start location into lat longs
 lat_2 = radians(float(start_loc[0]))
@@ -114,22 +117,17 @@ for s in waypoints:
     distance = Rad * c
     ## convert to feet
     final = distance * 5280
-    print(final)
     ## add the distance from start to the list
     dist.append(final)
     ## sort the list based on which point is the closest to the start
 sort = sorted(range(len(dist)), key=lambda k: dist[k])
-print(sort)
 
 ## re-sort the original lat long list based on which waypoints are closest to the start
 wp = [waypoints[i] for i in sort]
-print(wp)
 
 ## final_value gives the index of the final value in the list
 ## subtracted by 2 because the end point from the last light to the end location will not have a light
 final_value = len(wp) - 2
-print("final value: ", final_value)
-
 
 while final_value:
     final_point = convert.latlng(wp[final_value])
@@ -157,13 +155,15 @@ while final_value:
     Y = cos(cardinal_start_lat)*sin(cardinal_end_lat) - sin(cardinal_start_lat)*cos(cardinal_end_lat)* cos(dL)
     bearing = atan2(X,Y)
     result = ((degrees(bearing) + 360) % 360)
+    light = (sorting[value])
     ## locate which direction for the intersection in the data
-    sorting = int(sort[final_value - 1])
-    print(sorting)
+    locations  = (data["intersections"][light]["name"])
+    print("Location: ", locations)
+
     if 337.5 <= result <= 360:
         status = "north"
         print(status)
-        testing = (data["intersections"][sorting]["directions"][status]["start_time"])
+        testing = (data["intersections"][light]["directions"][status]["start_time"])
         green_turn = str(testing)
         year, month, day, hour, minute, second = map(int, green_turn.split('-'))
         green_time = datetime.datetime(year, month, day, hour, minute, second)
@@ -173,8 +173,8 @@ while final_value:
         ## convert time inbetween to seconds
         totaltime = timedelta.total_seconds(between_time)
         ## how long the light is red/green for
-        greentime = (data["intersections"][sorting]["directions"][status]["green_time"])
-        redtime = (data["intersections"][sorting]["directions"][status]["red_time"])
+        greentime = (data["intersections"][light]["directions"][status]["green_time"])
+        redtime = (data["intersections"][light]["directions"][status]["red_time"])
         ## the amount of time inbetween the time when the light turned green and the arrival at the light
         ## how many seconds the light takes to run one cycle
         cycletime = greentime + redtime
@@ -201,7 +201,7 @@ while final_value:
     if 0 <= result < 22.5:
         status = "north"
         print(status)
-        testing = (data["intersections"][sorting]["directions"][status]["start_time"])
+        testing = (data["intersections"][light]["directions"][status]["start_time"])
         green_turn = str(testing)
         year, month, day, hour, minute, second = map(int, green_turn.split('-'))
         green_time = datetime.datetime(year, month, day, hour, minute, second)
@@ -211,8 +211,8 @@ while final_value:
         ## convert time inbetween to seconds
         totaltime = timedelta.total_seconds(between_time)
         ## how long the light is red/green for
-        greentime = (data["intersections"][sorting]["directions"][status]["green_time"])
-        redtime = (data["intersections"][sorting]["directions"][status]["red_time"])
+        greentime = (data["intersections"][light]["directions"][status]["green_time"])
+        redtime = (data["intersections"][light]["directions"][status]["red_time"])
         ## the amount of time inbetween the time when the light turned green and the arrival at the light
         ## how many seconds the light takes to run one cycle
         cycletime = greentime + redtime
@@ -241,7 +241,7 @@ while final_value:
     if 67.5 <= result < 112.5:
         status = "east"
         print(status)
-        testing = (data["intersections"][sorting]["directions"][status]["start_time"])
+        testing = (data["intersections"][light]["directions"][status]["start_time"])
         green_turn = str(testing)
         year, month, day, hour, minute, second = map(int, green_turn.split('-'))
         green_time = datetime.datetime(year, month, day, hour, minute, second)
@@ -251,8 +251,8 @@ while final_value:
         ## convert time inbetween to seconds
         totaltime = timedelta.total_seconds(between_time)
         ## how long the light is red/green for
-        greentime = (data["intersections"][sorting]["directions"][status]["green_time"])
-        redtime = (data["intersections"][sorting]["directions"][status]["red_time"])
+        greentime = (data["intersections"][light]["directions"][status]["green_time"])
+        redtime = (data["intersections"][light]["directions"][status]["red_time"])
         ## the amount of time inbetween the time when the light turned green and the arrival at the light
         ## how many seconds the light takes to run one cycle
         cycletime = greentime + redtime
@@ -281,7 +281,7 @@ while final_value:
     if 157.5 <= result < 202.5:
         status = "south"
         print(status)
-        testing = (data["intersections"][sorting]["directions"][status]["start_time"])
+        testing = (data["intersections"][light]["directions"][status]["start_time"])
         green_turn = str(testing)
         year, month, day, hour, minute, second = map(int, green_turn.split('-'))
         green_time = datetime.datetime(year, month, day, hour, minute, second)
@@ -291,8 +291,8 @@ while final_value:
         ## convert time inbetween to seconds
         totaltime = timedelta.total_seconds(between_time)
         ## how long the light is red/green for
-        greentime = (data["intersections"][sorting]["directions"][status]["green_time"])
-        redtime = (data["intersections"][sorting]["directions"][status]["red_time"])
+        greentime = (data["intersections"][light]["directions"][status]["green_time"])
+        redtime = (data["intersections"][light]["directions"][status]["red_time"])
         ## the amount of time inbetween the time when the light turned green and the arrival at the light
         ## how many seconds the light takes to run one cycle
         cycletime = greentime + redtime
@@ -321,7 +321,7 @@ while final_value:
     if 247.5 <= result < 292.5:
         status = "west"
         print(status)
-        testing = (data["intersections"][sorting]["directions"][status]["start_time"])
+        testing = (data["intersections"][light]["directions"][status]["start_time"])
         green_turn = str(testing)
         year, month, day, hour, minute, second = map(int, green_turn.split('-'))
         green_time = datetime.datetime(year, month, day, hour, minute, second)
@@ -331,8 +331,8 @@ while final_value:
         ## convert time inbetween to seconds
         totaltime = timedelta.total_seconds(between_time)
         ## how long the light is red/green for
-        greentime = (data["intersections"][sorting]["directions"][status]["green_time"])
-        redtime = (data["intersections"][sorting]["directions"][status]["red_time"])
+        greentime = (data["intersections"][light]["directions"][status]["green_time"])
+        redtime = (data["intersections"][light]["directions"][status]["red_time"])
         ## the amount of time inbetween the time when the light turned green and the arrival at the light
         ## how many seconds the light takes to run one cycle
         cycletime = greentime + redtime
@@ -361,6 +361,7 @@ while final_value:
     ## use json file to format time when light turns greem
     ## convert time into datetime
     final_value -= 1
+    value = value + 1
     if final_value == 0:
         break
 
