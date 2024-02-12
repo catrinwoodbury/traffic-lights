@@ -8,13 +8,18 @@ import math
 
 ## radius of the earth in miles
 Rad = 3959.87433
+## open value
 value = 0
+## open list
 wp = []
+## open list
 place_waypoints = []
+## open list
 dist =[]
+## open value
 green_count = 0
+## open value
 red_count = 0
-
 
 ## opens and grabs the api key
 with open("api_key.json") as api:
@@ -44,11 +49,12 @@ parameters_directions = {"origin": starting_point,
                         "destination": end_point,  
                         "arrival_time": convert.time(time_arrival), 
                         "key": api_key}
+## gets the request
 response_directions = requests.get(url_directions, params=parameters_directions)
+## turns the request into json format
 json_directions = (response_directions.json())
-final_directions = json.dumps(json_directions, indent = 4)
 
-## gets the polyline and decodes it from the entire route
+## gets the polyline and turns it into lat longs for the entire route
 poly_line = (json_directions["routes"][0]["overview_polyline"]["points"])
 decode = convert.decode_polyline(poly_line)
 
@@ -57,7 +63,9 @@ coords = [cord["lat,lng"] for cord in data["intersections"]]
 
 ## for each lat long value
 for i in coords:
+    ## turns the lat long into a tuple
     file = tuple(i)
+    ## converts to google map lat long format
     result = convert.normalize_lat_lng(file)
     ## breaks tuple into specific lat long coords
     lat2 = radians(result[0])
@@ -82,11 +90,12 @@ for i in coords:
         if final <= 500:
             wp.append(result)
             waypoints = list(set(wp))
+
+## 
 sorting = sorted(range(len(waypoints)), key=lambda k: waypoints[k])
 print(sorting)
 testing = [waypoints[i] for i in sorting]
 print(testing)
-
 ## gets the lat long coords of the start location
 start_loc = (convert.normalize_lat_lng(json_directions["routes"][0]["legs"][0]["start_location"]))
 ## add the start location to the waypoints
@@ -124,39 +133,68 @@ sort = sorted(range(len(dist)), key=lambda k: dist[k])
 
 ## re-sort the original lat long list based on which waypoints are closest to the start
 wp = [waypoints[i] for i in sort]
+print(wp)
 
 ## final_value gives the index of the final value in the list
 ## subtracted by 2 because the end point from the last light to the end location will not have a light
 final_value = len(wp) - 2
 
 while final_value:
-    final_point = convert.latlng(wp[final_value])
-    light_point = convert.latlng(wp[final_value - 1])
-    ## calc distance between end point and the lights
-    parameters_distance1 = {"origins": light_point,
+    if final_value == 1:
+        print("last light")
+        final_point = convert.latlng(wp[final_value - 1])
+        light_point = convert.latlng(wp[final_value])
+        parameters_distance1 = {"origins": light_point,
                         "destinations": final_point,  
                         "arrival_time": convert.time(time_arrival), 
                         "key": api_key}
-    response_directions = requests.get(url_distance, params=parameters_distance1)
-    json_directions = (response_directions.json())
-    final_directions = json.dumps(json_directions, indent = 4)
-    duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
-    ## format the time inbetween in datetime format
-    time = datetime.timedelta(seconds = duration)
-    ## update the running time by subtracting the arrival time from the inbetween time
-    time_arrival = time_arrival - time
-    ## get lat long values to calc cardinal directions
-    cardinal_end_lat = (wp[final_value][0])
-    cardinal_end_long = (wp[final_value][1])
-    cardinal_start_lat = (wp[final_value - 1][0])
-    cardinal_start_long = (wp[final_value -1][1])
-    dL = (cardinal_end_long)-(cardinal_start_long)
-    X = cos(cardinal_end_lat)* sin(dL)
-    Y = cos(cardinal_start_lat)*sin(cardinal_end_lat) - sin(cardinal_start_lat)*cos(cardinal_end_lat)* cos(dL)
-    bearing = atan2(X,Y)
-    result = ((degrees(bearing) + 360) % 360)
-    light = (sorting[value])
+        response_directions = requests.get(url_distance, params=parameters_distance1)
+        json_directions = (response_directions.json())
+        final_directions = json.dumps(json_directions, indent = 4)
+        duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
+        ## format the time inbetween in datetime format
+        time = datetime.timedelta(seconds = duration)
+        ## update the running time by subtracting the arrival time from the inbetween time
+        time_arrival = time_arrival - time
+        ## get lat long values to calc cardinal directions
+        cardinal_end_lat = (wp[final_value][0])
+        cardinal_end_long = (wp[final_value][1])
+        cardinal_start_lat = (wp[final_value - 1][0])
+        cardinal_start_long = (wp[final_value -1][1])
+        dL = (cardinal_end_long)-(cardinal_start_long)
+        X = cos(cardinal_end_lat)* sin(dL)
+        Y = cos(cardinal_start_lat)*sin(cardinal_end_lat) - sin(cardinal_start_lat)*cos(cardinal_end_lat)* cos(dL)
+        bearing = atan2(X,Y)
+        result = ((degrees(bearing) + 360) % 360) + 180
+    else:
+        final_point = convert.latlng(wp[final_value])
+        light_point = convert.latlng(wp[final_value - 1])
+        ## calc distance between end point and the lights
+        parameters_distance1 = {"origins": light_point,
+                            "destinations": final_point,  
+                            "arrival_time": convert.time(time_arrival), 
+                            "key": api_key}
+        response_directions = requests.get(url_distance, params=parameters_distance1)
+        json_directions = (response_directions.json())
+        final_directions = json.dumps(json_directions, indent = 4)
+        duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
+        ## format the time inbetween in datetime format
+        time = datetime.timedelta(seconds = duration)
+        ## update the running time by subtracting the arrival time from the inbetween time
+        time_arrival = time_arrival - time
+        ## get lat long values to calc cardinal directions
+        cardinal_end_lat = (wp[final_value][0])
+        cardinal_end_long = (wp[final_value][1])
+        cardinal_start_lat = (wp[final_value - 1][0])
+        cardinal_start_long = (wp[final_value -1][1])
+        dL = (cardinal_end_long)-(cardinal_start_long)
+        X = cos(cardinal_end_lat)* sin(dL)
+        Y = cos(cardinal_start_lat)*sin(cardinal_end_lat) - sin(cardinal_start_lat)*cos(cardinal_end_lat)* cos(dL)
+        bearing = atan2(X,Y)
+        result = ((degrees(bearing) + 360) % 360)
+        
     ## locate which direction for the intersection in the data
+    light = (sorting[value])
     locations  = (data["intersections"][light]["name"])
     print("Location: ", locations)
 
