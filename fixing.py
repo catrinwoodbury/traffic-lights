@@ -53,6 +53,7 @@ parameters_directions = {"origin": starting_point,
 response_directions = requests.get(url_directions, params=parameters_directions)
 ## turns the request into json format
 json_directions = (response_directions.json())
+print(json_directions)
 
 ## gets the polyline and turns it into lat longs for the entire route
 poly_line = (json_directions["routes"][0]["overview_polyline"]["points"])
@@ -91,19 +92,21 @@ for i in coords:
             wp.append(result)
             waypoints = list(set(wp))
 
-## 
+## creates a list of the original indexes of just the lights that are reordered based on the distance from the start location
 sorting = sorted(range(len(waypoints)), key=lambda k: waypoints[k])
+sorting.reverse()
 print(sorting)
+## creates a list of the lat longs of the lights ordered based on distance from the start location
 testing = [waypoints[i] for i in sorting]
-print(testing)
+
 ## gets the lat long coords of the start location
 start_loc = (convert.normalize_lat_lng(json_directions["routes"][0]["legs"][0]["start_location"]))
-## add the start location to the waypoints
+## add the start location to the waypoints list
 wp.append(start_loc)
 
 ## gets the lat long coords of the end location
 end_loc = (convert.normalize_lat_lng(json_directions["routes"][0]["legs"][0]["end_location"]))
-## add the end location to the waypoints
+## add the end location to the waypoints list
 wp.append(end_loc)
 
 ## make the waypoints list into a list
@@ -113,10 +116,11 @@ waypoints = list(set(wp))
 lat_2 = radians(float(start_loc[0]))
 long_2 = radians(float(start_loc[1]))
 
-## for each value in the waypoints list
+## for each value in the waypoints list calcualte the distance from the start location
 for s in waypoints: 
-    ## convert to form
+    ## convert to google maps api form
     convert_wp = convert.normalize_lat_lng(s)
+    ## take the individual lat and long values and convert to radians
     lat1 = radians(convert_wp[0])
     long1 = radians(convert_wp[1])
     dlon = long_2 - long1
@@ -126,7 +130,7 @@ for s in waypoints:
     distance = Rad * c
     ## convert to feet
     final = distance * 5280
-    ## add the distance from start to the list
+    ## adds distance values to empty list
     dist.append(final)
     ## sort the list based on which point is the closest to the start
 sort = sorted(range(len(dist)), key=lambda k: dist[k])
@@ -139,44 +143,63 @@ print(wp)
 ## subtracted by 2 because the end point from the last light to the end location will not have a light
 final_value = len(wp) - 2
 
+## occurs while the final value is greater than 0 but less than the length of the list minus two
 while final_value:
-    if final_value == 1:
+    ## if the final value is equal to the length of the list minus 2:
+    ## it that value is the last light (the value of the length of the list minus 1 is the end location)
+    if final_value == len(wp) - 2:
         print("last light")
-        final_point = convert.latlng(wp[final_value - 1])
+        ## the final point is the end location 
+        final_point = convert.latlng(wp[final_value + 1])
+        ## light point is the location of the last light
         light_point = convert.latlng(wp[final_value])
         parameters_distance1 = {"origins": light_point,
                         "destinations": final_point,  
                         "arrival_time": convert.time(time_arrival), 
                         "key": api_key}
+        ## gets the response of the api request
         response_directions = requests.get(url_distance, params=parameters_distance1)
+        ## formats the response in json format
         json_directions = (response_directions.json())
         final_directions = json.dumps(json_directions, indent = 4)
+        ## gets the amount of time inbetween the light and the final location
         duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
         ## format the time inbetween in datetime format
         time = datetime.timedelta(seconds = duration)
         ## update the running time by subtracting the arrival time from the inbetween time
         time_arrival = time_arrival - time
         ## get lat long values to calc cardinal directions
+        ## calculates the bearing between the two reversed and adds 180 at the end to get the right orientation
+        ## the endpoint is the location of the light
         cardinal_end_lat = (wp[final_value][0])
         cardinal_end_long = (wp[final_value][1])
+        ## the start location is the end point
         cardinal_start_lat = (wp[final_value - 1][0])
-        cardinal_start_long = (wp[final_value -1][1])
+        cardinal_start_long = (wp[final_value - 1][1])
         dL = (cardinal_end_long)-(cardinal_start_long)
         X = cos(cardinal_end_lat)* sin(dL)
         Y = cos(cardinal_start_lat)*sin(cardinal_end_lat) - sin(cardinal_start_lat)*cos(cardinal_end_lat)* cos(dL)
         bearing = atan2(X,Y)
-        result = ((degrees(bearing) + 360) % 360) + 180
+        ## 180 degrees is added to turn reverse the bearing to be from the light to the end location
+        result = (((degrees(bearing) + 360) + 180) % 360)
+    ## if the light is not the final light
     else:
+        ## the light closer to the end location
         final_point = convert.latlng(wp[final_value])
-        light_point = convert.latlng(wp[final_value - 1])
-        ## calc distance between end point and the lights
-        parameters_distance1 = {"origins": light_point,
+        ## the light further from the end location
+        start_point = convert.latlng(wp[final_value - 1])
+        ## calc distance between the two lights
+        parameters_distance1 = {"origins": start_point,
                             "destinations": final_point,  
                             "arrival_time": convert.time(time_arrival), 
                             "key": api_key}
+        ## gets the api response
         response_directions = requests.get(url_distance, params=parameters_distance1)
+        ## turns the api response into json formating 
         json_directions = (response_directions.json())
         final_directions = json.dumps(json_directions, indent = 4)
+        
+        ## grabs the time inbetween the lights from the api response
         duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
         ## format the time inbetween in datetime format
         time = datetime.timedelta(seconds = duration)
@@ -191,14 +214,59 @@ while final_value:
         X = cos(cardinal_end_lat)* sin(dL)
         Y = cos(cardinal_start_lat)*sin(cardinal_end_lat) - sin(cardinal_start_lat)*cos(cardinal_end_lat)* cos(dL)
         bearing = atan2(X,Y)
+        ## calculates the bearing inbetween the two lights
         result = ((degrees(bearing) + 360) % 360)
         
     ## locate which direction for the intersection in the data
+    ## from the list with the original indexes in the new order
     light = (sorting[value])
+    ## uses the original index value to grab the intersection name
     locations  = (data["intersections"][light]["name"])
     print("Location: ", locations)
-
-    if 337.5 <= result <= 360:
+    print(result)
+    ## if the result is in the north bearing
+    if 315 <= result <= 360:
+        status = "north"
+        print(status)
+        ## gets the time the light turned green from the original data
+        testing = (data["intersections"][light]["directions"][status]["start_time"])
+        green_turn = str(testing)
+        year, month, day, hour, minute, second = map(int, green_turn.split('-'))
+        ## formats the time the light turns green in date time format
+        green_time = datetime.datetime(year, month, day, hour, minute, second)
+        light_time = (time_arrival) - (time)
+        ## subtract the arrival time from the turn time
+        between_time = (light_time) - (green_time)
+        ## convert time inbetween to seconds
+        totaltime = timedelta.total_seconds(between_time)
+        ## how long the light is red/green for
+        greentime = (data["intersections"][light]["directions"][status]["green_time"])
+        redtime = (data["intersections"][light]["directions"][status]["red_time"])
+        ## the amount of time inbetween the time when the light turned green and the arrival at the light
+        ## how many seconds the light takes to run one cycle
+        cycletime = greentime + redtime
+        ## the number of cycles the light completes in the time between 
+        ## when the light turned green and the arrival at the light
+        rawnum = totaltime / cycletime
+        ## the number of complete cycles that can be run in that time
+        truncated_value = math.floor(rawnum)
+        ## the decimal of the number of incomplete cycles that can be run in that time
+        leftover = rawnum - truncated_value
+        ## the number of seconds into the new cycle the light is
+        partialcycle = leftover * cycletime
+        ## determines if light is red or green and tells user how much longer the light will be red or green for
+        if partialcycle <= greentime:
+            timetochange = round(greentime - partialcycle, 3)
+            green_count = green_count + 1
+            print( "The light will be GREEN for", timetochange, "more seconds.")
+        else:
+            timeinred = partialcycle - greentime
+            redleft = round(redtime - timeinred, 3)
+            red_count = red_count + 1
+            print("The light will be RED for", redleft, "more seconds.")
+            light_time = light_time - datetime.timedelta(seconds = redleft)
+    ## if the bearing is north
+    if 0 <= result < 45:
         status = "north"
         print(status)
         testing = (data["intersections"][light]["directions"][status]["start_time"])
@@ -236,47 +304,8 @@ while final_value:
             red_count = red_count + 1
             print("The light will be RED for", redleft, "more seconds.")
             light_time = light_time - datetime.timedelta(seconds = redleft)
-    if 0 <= result < 22.5:
-        status = "north"
-        print(status)
-        testing = (data["intersections"][light]["directions"][status]["start_time"])
-        green_turn = str(testing)
-        year, month, day, hour, minute, second = map(int, green_turn.split('-'))
-        green_time = datetime.datetime(year, month, day, hour, minute, second)
-        light_time = (time_arrival) - (time)
-        ## subtract the arrival time from the turn time
-        between_time = (light_time) - (green_time)
-        ## convert time inbetween to seconds
-        totaltime = timedelta.total_seconds(between_time)
-        ## how long the light is red/green for
-        greentime = (data["intersections"][light]["directions"][status]["green_time"])
-        redtime = (data["intersections"][light]["directions"][status]["red_time"])
-        ## the amount of time inbetween the time when the light turned green and the arrival at the light
-        ## how many seconds the light takes to run one cycle
-        cycletime = greentime + redtime
-        ## the number of cycles the light completes in the time between 
-        ## when the light turned green and the arrival at the light
-        rawnum = totaltime / cycletime
-        ## the number of complete cycles that can be run in that time
-        truncated_value = math.floor(rawnum)
-        ## the decimal of the number of incomplete cycles that can be run in that time
-        leftover = rawnum - truncated_value
-        ## the number of seconds into the new cycle the light is
-        partialcycle = leftover * cycletime
-        ## determines if light is red or green and tells user how much longer the light will be red or green for
-        if partialcycle <= greentime:
-            timetochange = round(greentime - partialcycle, 3)
-            green_count = green_count + 1
-            print( "The light will be GREEN for", timetochange, "more seconds.")
-        else:
-            timeinred = partialcycle - greentime
-            redleft = round(redtime - timeinred, 3)
-            red_count = red_count + 1
-            print("The light will be RED for", redleft, "more seconds.")
-            light_time = light_time - datetime.timedelta(seconds = redleft)
-    if 22.5 <= result < 67.5:
-        print("North-East")
-    if 67.5 <= result < 112.5:
+    ## if the bearing is east
+    if 45 <= result < 135:
         status = "east"
         print(status)
         testing = (data["intersections"][light]["directions"][status]["start_time"])
@@ -314,9 +343,8 @@ while final_value:
             red_count = red_count + 1
             print("The light will be RED for", redleft, "more seconds.")
             light_time = light_time - datetime.timedelta(seconds = redleft)
-    if 112.5 <= result < 157.5:
-        print("South-East")
-    if 157.5 <= result < 202.5:
+    ## if the bearing is south
+    if 135 <= result < 225:
         status = "south"
         print(status)
         testing = (data["intersections"][light]["directions"][status]["start_time"])
@@ -354,9 +382,8 @@ while final_value:
             red_count = red_count + 1
             print("The light will be RED for", redleft, "more seconds.")
             light_time = light_time - datetime.timedelta(seconds = redleft)
-    if 202.5 <= result < 247.5:
-        print("South-West")
-    if 247.5 <= result < 292.5:
+    ## if the bearing is west
+    if 225 <= result < 315:
         status = "west"
         print(status)
         testing = (data["intersections"][light]["directions"][status]["start_time"])
@@ -394,8 +421,6 @@ while final_value:
             red_count = red_count + 1
             print("The light will be RED for", redleft, "more seconds.")
             light_time = light_time - datetime.timedelta(seconds = redleft)
-    if 292.5 <= result < 337.5:
-        print("North-West")
     ## use json file to format time when light turns greem
     ## convert time into datetime
     final_value -= 1
