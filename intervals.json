@@ -3,24 +3,26 @@
         {
             "name": "Bowles and Wadsworth",
             "lat,lng": [39.60971159889172,-105.09142031890865],
-            "directions":{
-                "north" :{
-                    "right":{
-                        "green_time": 30,
-                        "red_time": 15,
-                        "start_time": "2023-12-25-6-20-00"
+            "directions":
+                {
+                    "north":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                         },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
                     },
-                    "left":{
-                        "green_time": 30,
-                        "red_time": 15,
-                        "start_time": "2023-12-25-6-20-00"
-                    },
-                    "straight":{
-                        "green_time": 30,
-                        "red_time": 15,
-                        "start_time": "2023-12-25-6-20-00"
-                    },
-                "east":{
+                    "east":{
                         "right":{
                             "green_time": 30,
                             "red_time": 15,
@@ -74,56 +76,229 @@
                 }
         },
         {
-            "name": "Coalmine and Wadsworth",
-            "lat,lng": [39.59517540890404,-105.09139250489149],
-            "directions":{
-                "north" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time": "2023-12-13-4-45-00"
-                },
-                "east" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time":"2023-12-13-4-45-00"
-                },
-                "south" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time":"2023-12-13-4-45-00"
-                },
-                "west" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time": "2023-12-13-4-45-00"
-                }  
-            }
+            "name": "Bowles and Wadsworth",
+            "lat,lng": [39.60971159889172,-105.09142031890865],
+            "directions":
+                {
+                    "north":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                         },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    },
+                    "east":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    },
+                "south":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    }, 
+                "west":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    }   
+                }
         },
         {
-            "name": "Kencaryl and Wadsworth",
-            "lat,lng": [39.58063011413268,-105.08706490264349], 
-            "directions":{
-                "north" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time": "2023-12-13-4-45-00"
-                },
-                "east" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time":"2023-12-13-4-45-00"
-                },
-                "south" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time": "2023-12-13-4-45-00"
-                },
-                "west" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time": "2023-12-13-4-45-00"
-                }  
-            }
+            "name": "Bowles and Wadsworth",
+            "lat,lng": [39.60971159889172,-105.09142031890865],
+            "directions":
+                {
+                    "north":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                         },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    },
+                    "east":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    },
+                "south":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    }, 
+                "west":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    }   
+                }
+        },
+        {
+            "name": "Bowles and Wadsworth",
+            "lat,lng": [39.60971159889172,-105.09142031890865],
+            "directions":
+                {
+                    "north":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                         },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    },
+                    "east":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    },
+                "south":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    }, 
+                "west":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    }   
+                }
         }
     ]
 }
