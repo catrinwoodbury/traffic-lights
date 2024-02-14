@@ -5,26 +5,73 @@
             "lat,lng": [39.60971159889172,-105.09142031890865],
             "directions":{
                 "north" :{
-                    "green_time": 30,
-                    "red_time": 15,
-                    "start_time": "2023-12-25-6-20-00"
-                },
-                "east" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time": "2023-12-13-4-45-00"
-                },
-                "south" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time": "2023-12-13-4-45-00"
-                },
-                "west" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time":"2023-12-13-4-45-00"
-                }  
-            }
+                    "right":{
+                        "green_time": 30,
+                        "red_time": 15,
+                        "start_time": "2023-12-25-6-20-00"
+                    },
+                    "left":{
+                        "green_time": 30,
+                        "red_time": 15,
+                        "start_time": "2023-12-25-6-20-00"
+                    },
+                    "straight":{
+                        "green_time": 30,
+                        "red_time": 15,
+                        "start_time": "2023-12-25-6-20-00"
+                    },
+                "east":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    },
+                "south":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    }, 
+                "west":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    }   
+                }
         },
         {
             "name": "Coalmine and Wadsworth",
