@@ -104,7 +104,9 @@ print(sorting)
 ordered = [waypoints[i] for i in sorting]
 print(ordered)
 
-steps = json_directions(["routes"][0]["legs"][0]["steps"])
+steps = (json_directions["routes"][0]["legs"][0]["steps"])
+print(steps)
+print(len(steps))
 
 for i in ordered:
     file = tuple(i)
@@ -113,6 +115,7 @@ for i in ordered:
     ## breaks tuple into specific lat long coords
     lat2 = radians(result[0])
     long2 = radians(result[1])
-    for i in steps:
-        lat = ["start_location"]["lat"]
-        long =["start_location"]["lng"]
+
+    for k in steps:
+        lat = (steps["start_location"]["lat"])
+        print(lat)
