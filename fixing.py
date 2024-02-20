@@ -53,7 +53,9 @@ parameters_directions = {"origin": starting_point,
 response_directions = requests.get(url_directions, params=parameters_directions)
 ## turns the request into json format
 json_directions = (response_directions.json())
-print(json_directions)
+final_directions = json.dumps(json_directions, indent = 4)
+
+print(final_directions)
 
 ## gets the polyline and turns it into lat longs for the entire route
 poly_line = (json_directions["routes"][0]["overview_polyline"]["points"])
