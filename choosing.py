@@ -114,4 +114,5 @@ for i in ordered:
     lat2 = radians(result[0])
     long2 = radians(result[1])
     for i in steps:
-
+        lat = ["start_location"]["lat"]
+        long =["start_location"]["lng"]
