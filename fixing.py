@@ -32,7 +32,7 @@ data = json.loads(f.read())
  
 ## start and end locations
 starting_point = "9100 W Ken Caryl Ave, Littleton, CO 80128"
-end_point = "5375 S Wadsworth Blvd, Lakewood, CO 80123"
+end_point = "8055 W Bowles Ave Suite 2A-1, Littleton, CO 80123"
 
 ## desired arrival time
 arrival_time = input("Input your desired arrival time in YYYY-MM-DD-HH-MM-SS format: ")
@@ -88,6 +88,7 @@ for i in coords:
         distance = Rad * c
         ## convert to feet
         final = distance * 5280
+        print(final)
         ## if the distance is less than or equal to 500 feet
         ## add the lat long coords to the waypoints list
         if final <= 500:
@@ -100,6 +101,7 @@ sorting.reverse()
 print(sorting)
 ## creates a list of the lat longs of the lights ordered based on distance from the start location
 testing = [waypoints[i] for i in sorting]
+print(testing)
 
 ## gets the lat long coords of the start location
 start_loc = (convert.normalize_lat_lng(json_directions["routes"][0]["legs"][0]["start_location"]))
@@ -149,75 +151,38 @@ final_value = len(wp) - 2
 while final_value:
     ## if the final value is equal to the length of the list minus 2:
     ## it that value is the last light (the value of the length of the list minus 1 is the end location)
-    if final_value == len(wp) - 2:
-        print("last light")
-        ## the final point is the end location 
-        final_point = convert.latlng(wp[final_value + 1])
-        ## light point is the location of the last light
-        light_point = convert.latlng(wp[final_value])
-        parameters_distance1 = {"origins": light_point,
-                        "destinations": final_point,  
-                        "arrival_time": convert.time(time_arrival), 
-                        "key": api_key}
-        ## gets the response of the api request
-        response_directions = requests.get(url_distance, params=parameters_distance1)
-        ## formats the response in json format
-        json_directions = (response_directions.json())
-        final_directions = json.dumps(json_directions, indent = 4)
-        ## gets the amount of time inbetween the light and the final location
-        duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
-        ## format the time inbetween in datetime format
-        time = datetime.timedelta(seconds = duration)
-        ## update the running time by subtracting the arrival time from the inbetween time
-        time_arrival = time_arrival - time
-        ## get lat long values to calc cardinal directions
-        ## calculates the bearing between the two reversed and adds 180 at the end to get the right orientation
-        ## the endpoint is the location of the light
-        cardinal_end_lat = (wp[final_value][0])
-        cardinal_end_long = (wp[final_value][1])
-        ## the start location is the end point
-        cardinal_start_lat = (wp[final_value - 1][0])
-        cardinal_start_long = (wp[final_value - 1][1])
-        dL = (cardinal_end_long)-(cardinal_start_long)
-        X = cos(cardinal_end_lat)* sin(dL)
-        Y = cos(cardinal_start_lat)*sin(cardinal_end_lat) - sin(cardinal_start_lat)*cos(cardinal_end_lat)* cos(dL)
-        bearing = atan2(X,Y)
-        ## 180 degrees is added to turn reverse the bearing to be from the light to the end location
-        result = (((degrees(bearing) + 360) + 180) % 360)
-    ## if the light is not the final light
-    else:
-        ## the light closer to the end location
-        final_point = convert.latlng(wp[final_value])
-        ## the light further from the end location
-        start_point = convert.latlng(wp[final_value - 1])
-        ## calc distance between the two lights
-        parameters_distance1 = {"origins": start_point,
+    ## the light closer to the end location
+    final_point = convert.latlng(wp[final_value])
+    ## the light further from the end location
+    start_point = convert.latlng(wp[final_value - 1])
+    ## calc distance between the two lights
+    parameters_distance1 = {"origins": start_point,
                             "destinations": final_point,  
                             "arrival_time": convert.time(time_arrival), 
                             "key": api_key}
-        ## gets the api response
-        response_directions = requests.get(url_distance, params=parameters_distance1)
-        ## turns the api response into json formating 
-        json_directions = (response_directions.json())
-        final_directions = json.dumps(json_directions, indent = 4)
+    ## gets the api response
+    response_directions = requests.get(url_distance, params=parameters_distance1)
+    ## turns the api response into json formating 
+    json_directions = (response_directions.json())
+    final_directions = json.dumps(json_directions, indent = 4)
         
-        ## grabs the time inbetween the lights from the api response
-        duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
-        ## format the time inbetween in datetime format
-        time = datetime.timedelta(seconds = duration)
-        ## update the running time by subtracting the arrival time from the inbetween time
-        time_arrival = time_arrival - time
-        ## get lat long values to calc cardinal directions
-        cardinal_end_lat = (wp[final_value][0])
-        cardinal_end_long = (wp[final_value][1])
-        cardinal_start_lat = (wp[final_value - 1][0])
-        cardinal_start_long = (wp[final_value -1][1])
-        dL = (cardinal_end_long)-(cardinal_start_long)
-        X = cos(cardinal_end_lat)* sin(dL)
-        Y = cos(cardinal_start_lat)*sin(cardinal_end_lat) - sin(cardinal_start_lat)*cos(cardinal_end_lat)* cos(dL)
-        bearing = atan2(X,Y)
-        ## calculates the bearing inbetween the two lights
-        result = ((degrees(bearing) + 360) % 360)
+    ## grabs the time inbetween the lights from the api response
+    duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
+    ## format the time inbetween in datetime format
+    time = datetime.timedelta(seconds = duration)
+    ## update the running time by subtracting the arrival time from the inbetween time
+    time_arrival = time_arrival - time
+    ## get lat long values to calc cardinal directions
+    cardinal_end_lat = (wp[final_value][0])
+    cardinal_end_long = (wp[final_value][1])
+    cardinal_start_lat = (wp[final_value - 1][0])
+    cardinal_start_long = (wp[final_value -1][1])
+    dL = (cardinal_end_long)-(cardinal_start_long)
+    X = cos(cardinal_end_lat)* sin(dL)
+    Y = cos(cardinal_start_lat)*sin(cardinal_end_lat) - sin(cardinal_start_lat)*cos(cardinal_end_lat)* cos(dL)
+    bearing = atan2(X,Y)
+    ## calculates the bearing inbetween the two lights
+    result = ((degrees(bearing) + 360) % 360)
         
     ## locate which direction for the intersection in the data
     ## from the list with the original indexes in the new order

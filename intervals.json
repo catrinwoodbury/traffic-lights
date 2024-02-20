@@ -1,82 +1,305 @@
 {
     "intersections": [
         {
+            "name": "KenCaryl and Pierce",
+            "lat,lng": [39.580695392455546, -105.07284047189508],
+            "directions":
+                {
+                    "north":{
+                        "right":{
+                            "green_time": 25,
+                            "red_time": 65,
+                            "start_time": "2024-02-14 14:15:23.931622"
+                        },
+                        "left":{
+                            "green_time": [18, 32, 12, 34, 25],
+                            "red_time": [71, 80, 85, 81, 85],
+                            "start_time": "2024-02-16 11:17:03.89, 2024-02-16 11:26:51.82, 2024-02-16 11:33:47.04, 2024-02-16 11:36:51.41, 2024-02-16 11:48:33.82"
+                         },
+                        "straight":{
+                            "green_time": [19, 17, 16, 21, 19],
+                            "red_time": [78, 83, 86, 78, 80],
+                            "start_time": "2024-02-16 11:20:23.78, 2024-02-16 11:24:01.08, 2024-02-16 11:30:23.82, 2024-02-16 11:45:25.29, 2024-02-16 11:52:23.91"
+                        }
+                    },
+                    "east":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    },
+                "south":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": [26, 29, 27, 37, 24],
+                            "red_time": [74, 71, 73, 62, 75],
+                            "start_time": "2024-02-16 10:55:10.67, 2024-02-16 11:01:51.16, 2024-02-16 11:05:11.52, 2024-02-16 11:08:31.28, 2024-02-16 11:11:51.71"
+                        },
+                        "straight":{
+                            "green_time": [31, 15, 30, 32, 15],
+                            "red_time": [92, 85, 83, 80, 70],
+                            "start_time": "2024-02-16 10:01:50.60, 2024-02-16 10:05:23.8, 2024-02-16 10:25:10.78, 2024-02-16 10:40:11.19, 2024-02-16 10:45:24.90"
+                        }
+                    }, 
+                "west":{
+                        "right":{
+                            "green_time": 35,
+                            "red_time": 65,
+                            "start_time": "2024-02-14 14:09:32.024707"
+                        },
+                        "left":{
+                            "green_time": [68, 63, 62, 64, 65],
+                            "red_time": [55, 67, 35, 41, 37],
+                            "start_time": "2024-02-16 10:33:59.69, 2024-02-16 10:37:22.36, 2024-02-16 10:42:23.53, 2024-02-16 10:50:41.60, 2024-02-16 10:57:19.72"
+                        },
+                        "straight":{
+                            "green_time": [52, 67, 46, 61, 46],
+                            "red_time": [38, 36, 67, 56, 66],
+                            "start_time": "2024-02-16 9:52:33.80, 2024-02-16 9:58:59.70, 2024-02-16 10:07:38.20, 2024-02-16 10:21:05.99, 2024-02-16 10:27:40.21"
+                        }
+                    }   
+                }
+        },
+        {
+            "name": "Coalmine and Pierce",
+            "lat,lng": [39.595231849420514, -105.07274900039232],
+            "directions":
+                {
+                    "north":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                         },
+                        "straight":{
+                            "green_time": 35,
+                            "red_time": 40,
+                            "start_time": "2024-02-14 14:45:08.526884"
+                        }
+                    },
+                    "east":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    },
+                "south":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+
+                        }
+                    }, 
+                "west":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    }   
+                }
+        },
+        {
+            "name": "Bowles and Pierce",
+            "lat,lng": [39.60981883597623, -105.07255889909767],
+            "directions":
+                {
+                    "north":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                         },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    },
+                    "east":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    },
+                "south":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    }, 
+                "west":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    }   
+                }
+        },
+        {
             "name": "Bowles and Wadsworth",
-            "lat,lng": [39.60971159889172,-105.09142031890865],
-            "directions":{
-                "north" :{
-                    "green_time": 30,
-                    "red_time": 15,
-                    "start_time": "2023-12-25-6-20-00"
-                },
-                "east" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time": "2023-12-13-4-45-00"
-                },
-                "south" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time": "2023-12-13-4-45-00"
-                },
-                "west" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time":"2023-12-13-4-45-00"
-                }  
-            }
-        },
-        {
-            "name": "Coalmine and Wadsworth",
-            "lat,lng": [39.59517540890404,-105.09139250489149],
-            "directions":{
-                "north" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time": "2023-12-13-4-45-00"
-                },
-                "east" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time":"2023-12-13-4-45-00"
-                },
-                "south" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time":"2023-12-13-4-45-00"
-                },
-                "west" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time": "2023-12-13-4-45-00"
-                }  
-            }
-        },
-        {
-            "name": "Kencaryl and Wadsworth",
-            "lat,lng": [39.58063011413268,-105.08706490264349], 
-            "directions":{
-                "north" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time": "2023-12-13-4-45-00"
-                },
-                "east" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time":"2023-12-13-4-45-00"
-                },
-                "south" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time": "2023-12-13-4-45-00"
-                },
-                "west" :{
-                    "green_time": 45,
-                    "red_time": 30,
-                    "start_time": "2023-12-13-4-45-00"
-                }  
-            }
+            "lat,lng": [39.56621801088418, -105.07284906826595],
+            "directions":
+                {
+                    "north":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                         },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    },
+                    "east":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    },
+                "south":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    }, 
+                "west":{
+                        "right":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "left":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        },
+                        "straight":{
+                            "green_time": 30,
+                            "red_time": 15,
+                            "start_time": "2023-12-25-6-20-00"
+                        }
+                    }   
+                }
         }
     ]
 }
