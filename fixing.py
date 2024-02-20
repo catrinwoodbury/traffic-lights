@@ -101,6 +101,7 @@ sorting.reverse()
 print(sorting)
 ## creates a list of the lat longs of the lights ordered based on distance from the start location
 testing = [waypoints[i] for i in sorting]
+print(testing)
 
 ## gets the lat long coords of the start location
 start_loc = (convert.normalize_lat_lng(json_directions["routes"][0]["legs"][0]["start_location"]))
