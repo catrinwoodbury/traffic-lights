@@ -20,7 +20,7 @@ distance =[]
 green_count = 0
 ## open value
 red_count = 0
-
+string_list = []
 ## opens and grabs the api key
 with open("api_key.json") as api:
     authent = json.load(api)
@@ -101,21 +101,96 @@ sorting = sorted(range(len(waypoints)), key=lambda k: waypoints[k])
 sorting.reverse()
 print(sorting)
 ## creates a list of the lat longs of the lights ordered based on distance from the start location
-ordered = [waypoints[i] for i in sorting]
-print(ordered)
+ordered = ([waypoints[i] for i in sorting])
+for i in ordered:
+    sorted = str(i)
+    string_list.append(sorted)
+print(string_list)
+full_list = [waypoints[i] for i in sorting]
 
 steps = (json_directions["routes"][0]["legs"][0]["steps"])
-print(steps)
-print(len(steps))
 
-for i in ordered:
-    file = tuple(i)
+for s in string_list:
+    file = tuple(s)
     ## converts to google map lat long format
     result = convert.normalize_lat_lng(file)
     ## breaks tuple into specific lat long coords
-    lat2 = radians(result[0])
-    long2 = radians(result[1])
-
-    for k in steps:
-        lat = (steps["start_location"]["lat"])
-        print(lat)
+    lat2 = (result[0])
+    floatlat2 = float(lat2)
+    long2 = (result[1])
+    floatlong2 = float(long2)
+    radianlat = radians(floatlat2)
+    radianlong = radians(floatlong2)
+    # for each step in the directions
+    for i in steps:
+        lat1 = radians(i["start_location"]["lat"])
+        long1 = radians(i["start_location"]["lng"])
+        dlon = radianlong - long1
+        dlat = radianlat - lat1
+        a = sin(dlat / 2)**2 + cos(lat1) * cos(radianlat) * sin(dlon / 2)**2
+        c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        distances = radius * c
+        ## convert to feet
+        final = distances * 5280
+        print(final)
+        if final <= 100:
+            maneuver = (i["maneuver"])
+            print(maneuver)           
+            if maneuver == "turn-right":
+                endlat = radians(i["end_location"]["lat"])
+                endlng = radians(i["end_location"]["lng"])
+                startlat = radians(i["start_location"]["lat"])
+                startlng = radians(i["start_location"]["lng"])
+                dL = (endlng)-(startlng)
+                X = cos(endlat)* sin(dL)
+                Y = cos(startlat)*sin(endlat) - sin(startlat)*cos(endlat)* cos(dL)
+                bearing = atan2(X,Y)
+                ## calculates the bearing inbetween the two lights
+                result = ((degrees(bearing) - 90) % 360)
+                ## add the bearing to the original list
+                string_list = list(map(lambda x: x.replace(s, result), string_list))
+                print(result)
+                print(string_list)
+            if maneuver == "turn-left":
+                endlat = radians(i["end_location"]["lat"])
+                endlng = radians(i["end_location"]["lng"])
+                startlat = radians(i["start_location"]["lat"])
+                startlng = radians(i["start_location"]["lng"])
+                dL = (endlng)-(startlng)
+                X = cos(endlat)* sin(dL)
+                Y = cos(startlat)*sin(endlat) - sin(startlat)*cos(endlat)* cos(dL)
+                bearing = atan2(X,Y)
+                ## calculates the bearing inbetween the two lights
+                result = ((degrees(bearing) + 90) % 360)
+                ## add the bearing to the original list
+                string_list = list(map(lambda x: x.replace(s, result), string_list))
+                print(result)
+                print(string_list)
+for l in ordered:
+    maneuver = "straight"
+    index  = ordered.index(l)
+    print(index)
+    if index == 0:
+        file = tuple(i)
+        ## converts to google map lat long format
+        result = convert.normalize_lat_lng(file)
+        ## breaks tuple into specific lat long coords
+        startlat = radians(json_directions["routes"][0]["legs"][0]["start_location"]["lat"])
+        startlng = radians(json_directions["routes"][0]["legs"][0]["start_location"]["lng"])
+        endlat = radians(result[0])
+        endlng = radians(result[1])
+        dL = (endlng)-(startlng)
+        X = cos(endlat)* sin(dL)
+        Y = cos(startlat)*sin(endlat) - sin(startlat)*cos(endlat)* cos(dL)
+        bearing = atan2(X,Y)
+        ## calculates the bearing inbetween the two lights
+        result = ((degrees(bearing) + 90) % 360)
+        ## add the bearing to the original list
+        string_list = list(map(lambda x: x.replace(s, result), string_list))
+        print(result)
+        print(string_list)
+    else:
+        result = (ordered[index - 1])
+        string_list = list(map(lambda x: x.replace(s, result), string_list))
+        print(result)
+        print(string_list)
