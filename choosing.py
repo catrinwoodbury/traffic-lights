@@ -55,7 +55,6 @@ response_directions = requests.get(url_directions, params=parameters_directions)
 json_directions = (response_directions.json())
 final_directions = json.dumps(json_directions, indent = 4)
 
-print(final_directions)
 
 ## gets the polyline and turns it into lat longs for the entire route
 poly_line = (json_directions["routes"][0]["overview_polyline"]["points"])
@@ -63,7 +62,6 @@ decode = convert.decode_polyline(poly_line)
 
 ## locates all lat long values in intersection data
 coords = [cord["lat,lng"] for cord in data["intersections"]] 
-print(coords)
 
 ## for each lat long value
 for i in coords:
@@ -98,36 +96,30 @@ for i in coords:
 
 ## creates a list of the original indexes of just the lights that are reordered based on the distance from the start location
 sorting = sorted(range(len(waypoints)), key=lambda k: waypoints[k])
-sorting.reverse()
-print(sorting)
 ## creates a list of the lat longs of the lights ordered based on distance from the start location
-ordered = ([waypoints[i] for i in sorting])
-for i in ordered:
-    sorted = str(i)
-    string_list.append(sorted)
-print(string_list)
+ordered = [waypoints[i] for i in sorting]
+print(ordered)
+
+maneuver_list = [waypoints[i] for i in sorting]
+
 full_list = [waypoints[i] for i in sorting]
 
 steps = (json_directions["routes"][0]["legs"][0]["steps"])
 
-for s in string_list:
+for s in ordered:
     file = tuple(s)
     ## converts to google map lat long format
     result = convert.normalize_lat_lng(file)
     ## breaks tuple into specific lat long coords
-    lat2 = (result[0])
-    floatlat2 = float(lat2)
-    long2 = (result[1])
-    floatlong2 = float(long2)
-    radianlat = radians(floatlat2)
-    radianlong = radians(floatlong2)
+    lat2 = radians(result[0])
+    long2 = radians(result[1])
     # for each step in the directions
     for i in steps:
         lat1 = radians(i["start_location"]["lat"])
         long1 = radians(i["start_location"]["lng"])
-        dlon = radianlong - long1
-        dlat = radianlat - lat1
-        a = sin(dlat / 2)**2 + cos(lat1) * cos(radianlat) * sin(dlon / 2)**2
+        dlon = long2 - long1
+        dlat = lat2 - lat1
+        a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
         c = 2 * atan2(sqrt(a), sqrt(1 - a))
         distances = radius * c
         ## convert to feet
@@ -148,9 +140,10 @@ for s in string_list:
                 ## calculates the bearing inbetween the two lights
                 result = ((degrees(bearing) - 90) % 360)
                 ## add the bearing to the original list
-                string_list = list(map(lambda x: x.replace(s, result), string_list))
-                print(result)
-                print(string_list)
+                index = ordered.index(s)
+                ordered[index] = result
+                maneuver_list[index] = maneuver
+                print(ordered)
             if maneuver == "turn-left":
                 endlat = radians(i["end_location"]["lat"])
                 endlng = radians(i["end_location"]["lng"])
@@ -163,34 +156,40 @@ for s in string_list:
                 ## calculates the bearing inbetween the two lights
                 result = ((degrees(bearing) + 90) % 360)
                 ## add the bearing to the original list
-                string_list = list(map(lambda x: x.replace(s, result), string_list))
-                print(result)
-                print(string_list)
+                index = ordered.index(s)
+                ordered[index] = result
+                maneuver_list[index] = maneuver
+                print(ordered)
 for l in ordered:
     maneuver = "straight"
     index  = ordered.index(l)
-    print(index)
-    if index == 0:
-        file = tuple(i)
-        ## converts to google map lat long format
-        result = convert.normalize_lat_lng(file)
-        ## breaks tuple into specific lat long coords
-        startlat = radians(json_directions["routes"][0]["legs"][0]["start_location"]["lat"])
-        startlng = radians(json_directions["routes"][0]["legs"][0]["start_location"]["lng"])
-        endlat = radians(result[0])
-        endlng = radians(result[1])
-        dL = (endlng)-(startlng)
-        X = cos(endlat)* sin(dL)
-        Y = cos(startlat)*sin(endlat) - sin(startlat)*cos(endlat)* cos(dL)
-        bearing = atan2(X,Y)
-        ## calculates the bearing inbetween the two lights
-        result = ((degrees(bearing) + 90) % 360)
-        ## add the bearing to the original list
-        string_list = list(map(lambda x: x.replace(s, result), string_list))
-        print(result)
-        print(string_list)
+    maneuver_list[index] = maneuver
+    
+    if type(l) == tuple:
+        if index == 0:
+            file = tuple(i)
+            ## converts to google map lat long format
+            result = convert.normalize_lat_lng(file)
+            ## breaks tuple into specific lat long coords
+            startlat = radians(json_directions["routes"][0]["legs"][0]["start_location"]["lat"])
+            startlng = radians(json_directions["routes"][0]["legs"][0]["start_location"]["lng"])
+            endlat = radians(result[0])
+            endlng = radians(result[1])
+            dL = (endlng)-(startlng)
+            X = cos(endlat)* sin(dL)
+            Y = cos(startlat)*sin(endlat) - sin(startlat)*cos(endlat)* cos(dL)
+            bearing = atan2(X,Y)
+            ## calculates the bearing inbetween the two lights
+            result = ((degrees(bearing) + 90) % 360)
+            ## add the bearing to the original list
+            index = ordered.index(s)
+            ordered[index] = result
+        else:
+            result = (ordered[index - 1])
+            index = ordered.index(s)
+            ordered[index] = result
     else:
-        result = (ordered[index - 1])
-        string_list = list(map(lambda x: x.replace(s, result), string_list))
-        print(result)
-        print(string_list)
+        continue
+
+print(ordered)
+print(maneuver_list)
