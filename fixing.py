@@ -98,7 +98,7 @@ for i in coords:
 ## creates a list of the original indexes of just the lights that are reordered based on the distance from the start location
 sorting = sorted(range(len(waypoints)), key=lambda k: waypoints[k])
 sorting.reverse()
-print(sorting)
+print("sorting" + sorting)
 ## creates a list of the lat longs of the lights ordered based on distance from the start location
 testing = [waypoints[i] for i in sorting]
 print(testing)
