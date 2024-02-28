@@ -14,6 +14,7 @@ value = 0
 wp = []
 ## open list
 place_waypoints = []
+index=[]
 ## open list
 distance =[]
 ## open value
@@ -93,6 +94,12 @@ for i in coords:
         if final <= 500:
             wp.append(result)
             waypoints = list(set(wp))
+            indexes = coords.index(i)
+            index.append(indexes)
+            index = list(set(index))
+
+print("waypoints:", waypoints)
+print("index", index)
 
 start = (convert.normalize_lat_lng(json_directions["routes"][0]["legs"][0]["start_location"]))
 start_lat = radians(float(start[0]))
