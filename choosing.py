@@ -11,10 +11,10 @@ radius = 3959.87433
 ## open value
 value = 0
 ## open list
-wp = []
+waypoints = []
 ## open list
 place_waypoints = []
-index=[]
+original_index=[]
 ## open list
 distance =[]
 ## open value
@@ -92,14 +92,14 @@ for i in coords:
         ## if the distance is less than or equal to 500 feet
         ## add the lat long coords to the waypoints list
         if final <= 500:
-            wp.append(result)
-            waypoints = list(set(wp))
             indexes = coords.index(i)
-            index.append(indexes)
-            index = list(set(index))
-
-print("waypoints:", waypoints)
-print("index", index)
+            original_index.append(indexes)
+            original_index = list(set(original_index))
+## creates an unordered list of the lat longs of the waypoints
+for i in original_index:
+    waypoint = (coords[i])
+    waypoint = tuple(waypoint)
+    waypoints.append(waypoint)
 
 start = (convert.normalize_lat_lng(json_directions["routes"][0]["legs"][0]["start_location"]))
 start_lat = radians(float(start[0]))
@@ -123,10 +123,13 @@ sort = sorted(range(len(distance)), key=lambda k: distance[k])
 print("sort: ", sort)
 ## re-sort the original lat long list based on which waypoints are closest to the start
 waypoints = [waypoints[i] for i in sort]
-print(waypoints)
+print("waypoints: ", type(waypoints[0]))
+
+## sorts the original indexes based on which ones are closest to the start point
+sorted_index = [original_index[i] for i in sort]
+print(sorted_index)
 
 bearing = [waypoints[i] for i in sort]
-print(bearing)
 
 maneuver_list = [waypoints[i] for i in sort]
 
@@ -187,10 +190,12 @@ for s in bearing:
                 index = bearing.index(s)
                 bearing[index] = result
                 maneuver_list[index] = maneuver
+print(type(bearing[0]))
 for l in bearing:
     if type(l) == tuple:
         maneuver = "straight"
         index  = bearing.index(l)
+        print(index)
         maneuver_list[index] = maneuver
         if index == 0:
             file = tuple(l)
@@ -236,4 +241,37 @@ print(bearing)
 print(maneuver_list)
 print(waypoints)
 
+## reverses the order of all the lists
+waypoints.reverse()
+bearing.reverse()
+maneuver_list.reverse()
+maneuver_list_length = len((waypoints))- 2
 
+time_values = []
+
+for i in waypoints:
+    ## if the lat lng is the final point on the route
+    if waypoints.index(i) == (len(waypoint) - 1):
+        break
+    else:
+        index = waypoints.index(i)
+        final_point = convert.latlng(waypoints[index])
+        start_point = convert.latlng(waypoints[(index-1)])
+        parameters_distance1 = {"origins": start_point,
+                            "destinations": final_point,  
+                            "arrival_time": convert.time(time_arrival), 
+                            "key": api_key}
+        ## gets the api response
+        response_directions = requests.get(url_distance, params=parameters_distance1)
+        ## turns the api response into json formating 
+        json_directions = (response_directions.json())
+        final_directions = json.dumps(json_directions, indent = 4)
+        ## grabs the time inbetween the lights from the api response
+        duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
+        ## format the time inbetween in datetime format
+        time = datetime.timedelta(seconds = duration)
+        ## update the running time by subtracting the arrival time from the inbetween time
+        time_arrival = time_arrival - time
+        time_values.append(time_arrival)
+
+print(time_values)
