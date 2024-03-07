@@ -88,7 +88,6 @@ for i in coords:
         distances = radius * c
         ## convert to feet
         final = distances * 5280
-        print(final)
         ## if the distance is less than or equal to 500 feet
         ## add the lat long coords to the waypoints list
         if final <= 500:
@@ -116,18 +115,14 @@ for i in waypoints:
     distances = radius * c
     ## convert to feet
     final = distances * 5280
-    print(final)
     distance.append(final)
 
 sort = sorted(range(len(distance)), key=lambda k: distance[k])
-print("sort: ", sort)
 ## re-sort the original lat long list based on which waypoints are closest to the start
 waypoints = [waypoints[i] for i in sort]
-print("waypoints: ", type(waypoints[0]))
 
 ## sorts the original indexes based on which ones are closest to the start point
 sorted_index = [original_index[i] for i in sort]
-print(sorted_index)
 
 bearing = [waypoints[i] for i in sort]
 
@@ -155,10 +150,8 @@ for s in bearing:
         distances = radius * c
         ## convert to feet
         final = distances * 5280
-        print(final)
         if final <= 100:
             maneuver = (i["maneuver"])
-            print(maneuver)           
             if maneuver == "turn-right":
                 endlat = radians(i["end_location"]["lat"])
                 endlng = radians(i["end_location"]["lng"])
@@ -190,12 +183,10 @@ for s in bearing:
                 index = bearing.index(s)
                 bearing[index] = result
                 maneuver_list[index] = maneuver
-print(type(bearing[0]))
 for l in bearing:
     if type(l) == tuple:
         maneuver = "straight"
         index  = bearing.index(l)
-        print(index)
         maneuver_list[index] = maneuver
         if index == 0:
             file = tuple(l)
@@ -236,11 +227,6 @@ waypoints.insert(0, start)
 lastvalue = len(waypoints) + 1
 waypoints.insert(lastvalue , end)
 
-
-print(bearing)
-print(maneuver_list)
-print(waypoints)
-
 ## reverses the order of all the lists
 waypoints.reverse()
 bearing.reverse()
@@ -249,29 +235,50 @@ maneuver_list_length = len((waypoints))- 2
 
 time_values = []
 
-for i in waypoints:
+max_index_wapoints = (len(waypoints) - 1)
+
+c = 0
+while c:
     ## if the lat lng is the final point on the route
-    if waypoints.index(i) == (len(waypoint) - 1):
-        break
+    ## gets the lat lng  for the specific intersection
+    print(c)
+    waypoint = (waypoints[c])
+    index = waypoints.index(waypoint)
+    print(index)
+    ## if the waypoint is 
+    if index == 0:
+        start_point =  (waypoints[index])
+        final_point = end_point 
+    if 1<= index <= max_index_wapoints:
+        start_point = (waypoints[index])
+        final_point = (waypoints[(index-1)])
+    if index > max_index_wapoints:
+        start_point = starting_point
+        final_point = (waypoints[index])
     else:
-        index = waypoints.index(i)
-        final_point = convert.latlng(waypoints[index])
-        start_point = convert.latlng(waypoints[(index-1)])
-        parameters_distance1 = {"origins": start_point,
-                            "destinations": final_point,  
+        print('error')
+
+    final = convert.latlng(final_point)
+    start = convert.latlng(start_point)
+    parameters_distance1 = {"origins": start,
+                            "destinations": start,  
                             "arrival_time": convert.time(time_arrival), 
                             "key": api_key}
-        ## gets the api response
-        response_directions = requests.get(url_distance, params=parameters_distance1)
-        ## turns the api response into json formating 
-        json_directions = (response_directions.json())
-        final_directions = json.dumps(json_directions, indent = 4)
-        ## grabs the time inbetween the lights from the api response
-        duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
-        ## format the time inbetween in datetime format
-        time = datetime.timedelta(seconds = duration)
-        ## update the running time by subtracting the arrival time from the inbetween time
-        time_arrival = time_arrival - time
-        time_values.append(time_arrival)
+    ## gets the api response
+    response_directions = requests.get(url_distance, params=parameters_distance1)
+    ## turns the api response into json formating 
+    json_directions = (response_directions.json())
+    final_directions = json.dumps(json_directions, indent = 4)
+    ## grabs the time inbetween the lights from the api response
+    duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
+    ## format the time inbetween in datetime format
+    time = datetime.timedelta(seconds = duration)
+    print(time_arrival)
+    ## update the running time by subtracting the arrival time from the inbetween time
+    time_arrival = time_arrival - time
+    time_values.append(time_arrival)
 
-print(time_values)
+    c += 1
+    if c > max_index_wapoints:
+        break
+
