@@ -11,10 +11,11 @@ radius = 3959.87433
 ## open value
 value = 0
 ## open list
-wp = []
+waypoints = []
 ## open list
 index_value = []
 place_waypoints = []
+original_index=[]
 ## open list
 distance =[]
 result = []
@@ -91,22 +92,17 @@ for i in coords:
         distances = radius * c
         ## convert to feet
         final = distances * 5280
-        print(final)
         ## if the distance is less than or equal to 500 feet
         ## add the lat long coords to the waypoints list
         if final <= 500:
-            wp.append(result)
-            waypoints = list(set(wp))
-            index = coords.index(i)
-            index_value.append(index)
-
-## remove repeated list elements
-index_value = list(set(index_value))
-print(index_value)
-
-
-sorting = sorted(range(len(waypoints)), key=lambda k: waypoints[k])
-sorting.reverse()
+            indexes = coords.index(i)
+            original_index.append(indexes)
+            original_index = list(set(original_index))
+## creates an unordered list of the lat longs of the waypoints
+for i in original_index:
+    waypoint = (coords[i])
+    waypoint = tuple(waypoint)
+    waypoints.append(waypoint)
 
 start = (convert.normalize_lat_lng(json_directions["routes"][0]["legs"][0]["start_location"]))
 start_lat = radians(float(start[0]))
@@ -123,21 +119,16 @@ for i in waypoints:
     distances = radius * c
     ## convert to feet
     final = distances * 5280
-    print(final)
     distance.append(final)
 
 sort = sorted(range(len(distance)), key=lambda k: distance[k])
-print("sort: ", sort)
-
-print(waypoints)
-index_value = [index_value[i] for i in sort]
-print(index_value)
 ## re-sort the original lat long list based on which waypoints are closest to the start
 waypoints = [waypoints[i] for i in sort]
-print(waypoints)
+
+## sorts the original indexes based on which ones are closest to the start point
+sorted_index = [original_index[i] for i in sort]
 
 bearing = [waypoints[i] for i in sort]
-print(bearing)
 
 maneuver_list = [waypoints[i] for i in sort]
 
@@ -165,7 +156,6 @@ for s in bearing:
         final = distances * 5280
         if final <= 100:
             maneuver = (i["maneuver"])
-            print(maneuver)           
             if maneuver == "turn-right":
                 endlat = radians(i["end_location"]["lat"])
                 endlng = radians(i["end_location"]["lng"])
@@ -241,35 +231,58 @@ waypoints.insert(0, start)
 lastvalue = len(waypoints) + 1
 waypoints.insert(lastvalue , end)
 
+## reverses the order of all the lists
+waypoints.reverse()
+bearing.reverse()
+maneuver_list.reverse()
+maneuver_list_length = len((waypoints))- 2
 
-print(bearing)
-print(maneuver_list)
-print(waypoints)
+time_values = []
 
-length = len(waypoints) - 1
-while length:
-    print(length)
-    final_point = convert.latlng(waypoints[length])
-    start_point = convert.latlng(waypoints[length - 1])
-    parameters_distance1 = {"origins": start_point,
-                            "destinations": final_point,  
+max_index_wapoints = (len(waypoints) - 1)
+
+c = 0
+while c:
+    ## if the lat lng is the final point on the route
+    ## gets the lat lng  for the specific intersection
+    print(c)
+    waypoint = (waypoints[c])
+    index = waypoints.index(waypoint)
+    print(index)
+    ## if the waypoint is 
+    if index == 0:
+        start_point =  (waypoints[index])
+        final_point = end_point 
+    if 1<= index <= max_index_wapoints:
+        start_point = (waypoints[index])
+        final_point = (waypoints[(index-1)])
+    if index > max_index_wapoints:
+        start_point = starting_point
+        final_point = (waypoints[index])
+    else:
+        print('error')
+
+    final = convert.latlng(final_point)
+    start = convert.latlng(start_point)
+    parameters_distance1 = {"origins": start,
+                            "destinations": start,  
                             "arrival_time": convert.time(time_arrival), 
                             "key": api_key}
-     ## gets the api response
+    ## gets the api response
     response_directions = requests.get(url_distance, params=parameters_distance1)
     ## turns the api response into json formating 
     json_directions = (response_directions.json())
     final_directions = json.dumps(json_directions, indent = 4)
+    ## grabs the time inbetween the lights from the api response
     duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
     ## format the time inbetween in datetime format
     time = datetime.timedelta(seconds = duration)
+    print(time_arrival)
     ## update the running time by subtracting the arrival time from the inbetween time
     time_arrival = time_arrival - time
-    light = (sorting[value])
-    ## uses the original index value to grab the intersection name
-    locations  = (data["intersections"][light]["name"])
-    print("Location: ", locations)
-    ## subtracts the length of the waypoints list from the number of loops left minus one for the loc in the list
-    length -= 1
-    if length == 0:
+    time_values.append(time_arrival)
+
+    c += 1
+    if c > max_index_wapoints:
         break
+
