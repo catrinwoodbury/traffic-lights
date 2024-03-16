@@ -39,7 +39,7 @@ end_point = "7034 W Roxbury Pl, Littleton, CO 80128"
 
 ## desired arrival time
 input_time = input("Input your desired arrival time in YYYY-MM-DD-HH-MM-SS format: ")
-year, month, day, hour, minute, second = map(int, input_time.split('-'))
+year, month, day, hour, minute, second = map(int, str(input_time).split('-'))
 time_arrival = datetime.datetime(year, month, day, hour, minute, second)
 
 ## base api urls
@@ -283,6 +283,6 @@ while c:
     time_values.append(time_arrival)
 
     c += 1
-    if c > max_index_wapoints:
+    if c > max_index_waypoints:
         break
 
