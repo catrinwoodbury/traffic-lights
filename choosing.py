@@ -135,7 +135,6 @@ maneuver_list = [waypoints[i] for i in sort]
 full_list = [waypoints[i] for i in sort]
 
 steps = (json_directions["routes"][0]["legs"][0]["steps"])
-print("sorting: ", sorting)
 for s in bearing:
     file = tuple(s)
     ## converts to google map lat long format
@@ -239,24 +238,25 @@ maneuver_list_length = len((waypoints))- 2
 
 time_values = []
 
-max_index_wapoints = (len(waypoints) - 1)
+max_index_waypoints = (len(waypoints) - 1)
+## 4
 
-c = 0
-while c:
+
+while i:
     ## if the lat lng is the final point on the route
     ## gets the lat lng  for the specific intersection
-    print(c)
-    waypoint = (waypoints[c])
+    print(i)
+    waypoint = (waypoints[i])
     index = waypoints.index(waypoint)
     print(index)
     ## if the waypoint is 
     if index == 0:
         start_point =  (waypoints[index])
         final_point = end_point 
-    if 1<= index <= max_index_wapoints:
+    if 1<= index <= max_index_waypoints:
         start_point = (waypoints[index])
         final_point = (waypoints[(index-1)])
-    if index > max_index_wapoints:
+    if index > max_index_waypoints:
         start_point = starting_point
         final_point = (waypoints[index])
     else:
@@ -282,7 +282,7 @@ while c:
     time_arrival = time_arrival - time
     time_values.append(time_arrival)
 
-    c += 1
-    if c > max_index_waypoints:
+    i += 1
+    if i > max_index_waypoints:
         break
 
