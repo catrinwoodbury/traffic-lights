@@ -13,10 +13,12 @@ value = 0
 ## open list
 waypoints = []
 ## open list
+index_value = []
 place_waypoints = []
 original_index=[]
 ## open list
 distance =[]
+result = []
 ## open value
 green_count = 0
 ## open value
@@ -37,7 +39,7 @@ end_point = "7034 W Roxbury Pl, Littleton, CO 80128"
 
 ## desired arrival time
 input_time = input("Input your desired arrival time in YYYY-MM-DD-HH-MM-SS format: ")
-year, month, day, hour, minute, second = map(int, input_time.split('-'))
+year, month, day, hour, minute, second = map(int, str(input_time).split('-'))
 time_arrival = datetime.datetime(year, month, day, hour, minute, second)
 
 ## base api urls
@@ -59,10 +61,12 @@ final_directions = json.dumps(json_directions, indent = 4)
 
 ## gets the polyline and turns it into lat longs for the entire route
 poly_line = (json_directions["routes"][0]["overview_polyline"]["points"])
+print(poly_line)
 decode = convert.decode_polyline(poly_line)
 
 ## locates all lat long values in intersection data
 coords = [cord["lat,lng"] for cord in data["intersections"]] 
+print(coords)
 
 ## for each lat long value
 for i in coords:
@@ -131,7 +135,6 @@ maneuver_list = [waypoints[i] for i in sort]
 full_list = [waypoints[i] for i in sort]
 
 steps = (json_directions["routes"][0]["legs"][0]["steps"])
-
 for s in bearing:
     file = tuple(s)
     ## converts to google map lat long format
@@ -235,24 +238,25 @@ maneuver_list_length = len((waypoints))- 2
 
 time_values = []
 
-max_index_wapoints = (len(waypoints) - 1)
+max_index_waypoints = (len(waypoints) - 1)
+## 4
 
-c = 0
-while c:
+
+while i:
     ## if the lat lng is the final point on the route
     ## gets the lat lng  for the specific intersection
-    print(c)
-    waypoint = (waypoints[c])
+    print(i)
+    waypoint = (waypoints[i])
     index = waypoints.index(waypoint)
     print(index)
     ## if the waypoint is 
     if index == 0:
         start_point =  (waypoints[index])
         final_point = end_point 
-    if 1<= index <= max_index_wapoints:
+    if 1<= index <= max_index_waypoints:
         start_point = (waypoints[index])
         final_point = (waypoints[(index-1)])
-    if index > max_index_wapoints:
+    if index > max_index_waypoints:
         start_point = starting_point
         final_point = (waypoints[index])
     else:
@@ -278,7 +282,7 @@ while c:
     time_arrival = time_arrival - time
     time_values.append(time_arrival)
 
-    c += 1
-    if c > max_index_wapoints:
+    i += 1
+    if i > max_index_waypoints:
         break
 
