@@ -1,13 +1,13 @@
 //
-//  Navigation_SystemUITestsLaunchTests.swift
-//  Navigation SystemUITests
+//  NavigationUITestsLaunchTests.swift
+//  NavigationUITests
 //
-//  Created by Woodbury Catrin on 3/13/24.
+//  Created by Woodbury Catrin on 3/29/24.
 //
 
 import XCTest
 
-final class Navigation_SystemUITestsLaunchTests: XCTestCase {
+final class NavigationUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

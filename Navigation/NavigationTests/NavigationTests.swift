@@ -1,14 +1,14 @@
 //
-//  Navigation_SystemTests.swift
-//  Navigation SystemTests
+//  NavigationTests.swift
+//  NavigationTests
 //
-//  Created by Woodbury Catrin on 3/13/24.
+//  Created by Woodbury Catrin on 3/29/24.
 //
 
 import XCTest
-@testable import Navigation_System
+@testable import Navigation
 
-final class Navigation_SystemTests: XCTestCase {
+final class NavigationTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
