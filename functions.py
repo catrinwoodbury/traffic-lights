@@ -78,7 +78,7 @@ def route(starting_point, end_point, input_time):
                 original_index_list.append(indexes)
                 original_index_list = list(set(original_index_list))
                 ## create a list of the intersections on the route
-                intersections.append(i)
+                intersections.append(tuple(i))
     intersections = list(set(intersections))
     print(intersections)
     ## gets the start location in google maps format 
@@ -242,7 +242,6 @@ def route(starting_point, end_point, input_time):
         ## turns the api response into json formating 
         json_directions = (response_directions.json())
         final_directions = json.dumps(json_directions, indent = 4)
-        print(final_directions)
         ## grabs the time inbetween the lights from the api response
         duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
         time = datetime.timedelta(seconds = duration)
@@ -250,14 +249,19 @@ def route(starting_point, end_point, input_time):
         time_arrival -= time
 
         bearing_value = (bearing_list[empty_value])
-        print(type(bearing_value))
         if 315 <= bearing_value <= 360:
             bearing = "north"
-        if 0 <= result < 45:
+        if 0 <= bearing_value < 45:
             bearing = "north"
-        if 45 <= result < 135:
+        if 45 <= bearing_value < 135:
             bearing = "east"
-        
+        if 135 <= bearing_value < 225:
+            bearing = "south"
+        if 225 <= bearing_value < 315:
+            bearing = "west"
+        else:
+            print("error: ", bearing_value)
+        print(bearing)
         empty_value += 1
 
 route(starting_point ="6281 W Alder Ave, Littleton, CO 80128", end_point ="7034 W Roxbury Pl, Littleton, CO 80128", input_time = "2024-3-31-00-00-00")
