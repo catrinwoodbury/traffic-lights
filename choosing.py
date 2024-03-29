@@ -6,10 +6,7 @@ from googlemaps import convert
 from datetime import timedelta
 import math
 
-## radius of the earth in miles
-radius = 3959.87433
-## open value
-value = 0
+
 ## open list
 waypoints = []
 ## open list
@@ -89,6 +86,8 @@ for i in coords:
         dlat = lat2 - end_lat
         a = sin(dlat / 2)**2 + cos(end_lat) * cos(lat2) * sin(dlon / 2)**2
         c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        ## radius of the earth in miles
+        radius = 3959.87433
         distances = radius * c
         ## convert to feet
         final = distances * 5280
@@ -135,6 +134,7 @@ maneuver_list = [waypoints[i] for i in sort]
 full_list = [waypoints[i] for i in sort]
 
 steps = (json_directions["routes"][0]["legs"][0]["steps"])
+
 for s in bearing:
     file = tuple(s)
     ## converts to google map lat long format
@@ -167,7 +167,7 @@ for s in bearing:
                 ## calculates the bearing inbetween the two lights
                 result = ((degrees(degree) - 90) % 360)
                 ## add the bearing to the original list
-                ## the bearing represents the direction before the maneuver
+                ## CHECK TO SEE IF THE BEARING IS BEFORE OR AFTER THE MANUEVER
                 index = bearing.index(s)
                 bearing[index] = result
                 maneuver_list[index] = maneuver
@@ -186,13 +186,15 @@ for s in bearing:
                 index = bearing.index(s)
                 bearing[index] = result
                 maneuver_list[index] = maneuver
+## the end location is pulling from the result which has probably already be converted into a bearing instead of a lat lng
+## need to call the waypoints list instead of the bearing list
 for l in bearing:
     if type(l) == tuple:
         maneuver = "straight"
         index  = bearing.index(l)
         maneuver_list[index] = maneuver
         if index == 0:
-            file = tuple(l)
+            file = tuple(waypoints[index])
             ## converts to google map lat long format
             result = convert.normalize_lat_lng(file)
             ## breaks tuple into specific lat long coords
@@ -205,25 +207,20 @@ for l in bearing:
             Y = cos(startlat)*sin(endlat) - sin(startlat)*cos(endlat)* cos(dL)
             degree = atan2(X,Y)
             ## calculates the bearing inbetween the two lights
-            result = ((degrees(degree) + 90) % 360)
+            result = (degrees(degree) % 360)
             ## add the bearing to the original list
-            index = bearing.index(l)
             bearing[index] = result
         else:
-            for i in maneuver_list:
-                if i == "straight":
-                    index = maneuver_list.index(i)
-                    turn = (maneuver_list[index - 1])
-                    if turn == "turn-right":
-                        result = (bearing[index - 1]) + 90
-                        index = bearing.index(l)
-                        bearing[index] = result
-                    if turn == "turn-left":
-                        result = (bearing[index - 1]) + 90
-                        index = bearing.index(l)
-                        bearing[index] = result
-    else:
-        continue
+            turn = (maneuver_list[index - 1])
+            if turn == "turn-right":
+                result = (bearing[index - 1]) + 90
+                index = bearing.index(l)
+                bearing[index] = result
+            if turn == "turn-left":
+                result = (bearing[index - 1]) + 90
+                index = bearing.index(l)
+                bearing[index] = result
+ 
 start = (convert.normalize_lat_lng(json_directions["routes"][0]["legs"][0]["start_location"]))
 end = (convert.normalize_lat_lng(json_directions["routes"][0]["legs"][0]["end_location"]))
 waypoints.insert(0, start)
