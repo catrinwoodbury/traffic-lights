@@ -14,6 +14,11 @@
 		570D67AD2BA24D8500DA9751 /* Navigation_SystemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570D67AC2BA24D8500DA9751 /* Navigation_SystemTests.swift */; };
 		570D67B72BA24D8500DA9751 /* Navigation_SystemUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570D67B62BA24D8500DA9751 /* Navigation_SystemUITests.swift */; };
 		570D67B92BA24D8500DA9751 /* Navigation_SystemUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570D67B82BA24D8500DA9751 /* Navigation_SystemUITestsLaunchTests.swift */; };
+		57C990622BB5CEE100E2CA33 /* GoogleMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 57C990612BB5CEE100E2CA33 /* GoogleMaps */; };
+		57C990642BB5CEE100E2CA33 /* GoogleMapsBase in Frameworks */ = {isa = PBXBuildFile; productRef = 57C990632BB5CEE100E2CA33 /* GoogleMapsBase */; };
+		57C990662BB5CEE100E2CA33 /* GoogleMapsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 57C990652BB5CEE100E2CA33 /* GoogleMapsCore */; };
+		57C990682BB5CEE100E2CA33 /* GoogleMapsM4B in Frameworks */ = {isa = PBXBuildFile; productRef = 57C990672BB5CEE100E2CA33 /* GoogleMapsM4B */; };
+		57C990732BB5DBED00E2CA33 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57C990722BB5DBED00E2CA33 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +49,7 @@
 		570D67B22BA24D8500DA9751 /* Navigation SystemUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Navigation SystemUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		570D67B62BA24D8500DA9751 /* Navigation_SystemUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation_SystemUITests.swift; sourceTree = "<group>"; };
 		570D67B82BA24D8500DA9751 /* Navigation_SystemUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation_SystemUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		57C990722BB5DBED00E2CA33 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ../AppDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +57,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				57C990622BB5CEE100E2CA33 /* GoogleMaps in Frameworks */,
+				57C990662BB5CEE100E2CA33 /* GoogleMapsCore in Frameworks */,
+				57C990682BB5CEE100E2CA33 /* GoogleMapsM4B in Frameworks */,
+				57C990642BB5CEE100E2CA33 /* GoogleMapsBase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +88,7 @@
 				570D67AB2BA24D8500DA9751 /* Navigation SystemTests */,
 				570D67B52BA24D8500DA9751 /* Navigation SystemUITests */,
 				570D67992BA24D8200DA9751 /* Products */,
+				57C990602BB5CEAF00E2CA33 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -94,6 +105,7 @@
 		570D679A2BA24D8200DA9751 /* Navigation System */ = {
 			isa = PBXGroup;
 			children = (
+				57C990722BB5DBED00E2CA33 /* AppDelegate.swift */,
 				570D679B2BA24D8200DA9751 /* Navigation_SystemApp.swift */,
 				570D679D2BA24D8200DA9751 /* ContentView.swift */,
 				570D679F2BA24D8500DA9751 /* Assets.xcassets */,
@@ -127,6 +139,13 @@
 			path = "Navigation SystemUITests";
 			sourceTree = "<group>";
 		};
+		57C990602BB5CEAF00E2CA33 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -143,6 +162,12 @@
 			dependencies = (
 			);
 			name = "Navigation System";
+			packageProductDependencies = (
+				57C990612BB5CEE100E2CA33 /* GoogleMaps */,
+				57C990632BB5CEE100E2CA33 /* GoogleMapsBase */,
+				57C990652BB5CEE100E2CA33 /* GoogleMapsCore */,
+				57C990672BB5CEE100E2CA33 /* GoogleMapsM4B */,
+			);
 			productName = "Navigation System";
 			productReference = 570D67982BA24D8200DA9751 /* Navigation System.app */;
 			productType = "com.apple.product-type.application";
@@ -215,6 +240,9 @@
 				Base,
 			);
 			mainGroup = 570D678F2BA24D8200DA9751;
+			packageReferences = (
+				57C9905F2BB5CE8700E2CA33 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */,
+			);
 			productRefGroup = 570D67992BA24D8200DA9751 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -257,6 +285,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				57C990732BB5DBED00E2CA33 /* AppDelegate.swift in Sources */,
 				570D679E2BA24D8200DA9751 /* ContentView.swift in Sources */,
 				570D679C2BA24D8200DA9751 /* Navigation_SystemApp.swift in Sources */,
 			);
@@ -582,6 +611,40 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		57C9905F2BB5CE8700E2CA33 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googlemaps/ios-maps-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.4.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		57C990612BB5CEE100E2CA33 /* GoogleMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 57C9905F2BB5CE8700E2CA33 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */;
+			productName = GoogleMaps;
+		};
+		57C990632BB5CEE100E2CA33 /* GoogleMapsBase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 57C9905F2BB5CE8700E2CA33 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */;
+			productName = GoogleMapsBase;
+		};
+		57C990652BB5CEE100E2CA33 /* GoogleMapsCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 57C9905F2BB5CE8700E2CA33 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */;
+			productName = GoogleMapsCore;
+		};
+		57C990672BB5CEE100E2CA33 /* GoogleMapsM4B */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 57C9905F2BB5CE8700E2CA33 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */;
+			productName = GoogleMapsM4B;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 570D67902BA24D8200DA9751 /* Project object */;
 }
