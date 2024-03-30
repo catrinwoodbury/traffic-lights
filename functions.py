@@ -12,7 +12,8 @@ def route(starting_point, end_point, input_time):
     intersections = []
     distance = []
     maneuver_list = []
-
+    red_count = 0
+    green_count = 0
     ## radius of the earth in miles
     radius = 3959.87433
 
@@ -107,7 +108,7 @@ def route(starting_point, end_point, input_time):
     intersections = [intersections[i] for i in sort]
     bearing_list = [intersections[i] for i in sort]
     maneuver_list = [intersections[i] for i in sort]
-
+    sorted_index =[original_index_list[i] for i in sort]
     steps = (json_directions["routes"][0]["legs"][0]["steps"])
 
     for s in bearing_list:
@@ -187,11 +188,11 @@ def route(starting_point, end_point, input_time):
             else:
                 turn = (maneuver_list[index - 1])
                 if turn == "turn-right":
-                    result = (bearing_list[index - 1]) + 90
+                    result = (((bearing_list[index - 1]) + 90) % 360)
                     index = bearing_list.index(l)
                     bearing_list[index] = result
                 if turn == "turn-left":
-                    result = (bearing_list[index - 1]) - 90
+                    result = (((bearing_list[index - 1]) - 90) % 360)
                     index = bearing_list.index(l)
                     bearing_list[index] = result
 
@@ -202,23 +203,44 @@ def route(starting_point, end_point, input_time):
     intersections.insert(lastvalue , end)
 
 
-    ## Reverses the order of a list
-    intersections[::-1]
-    bearing_list[::-1]
-    maneuver_list[::-1]
 
     print(intersections)
     ## creates an empty value
     empty_value = 0
 
-    while empty_value < (len(intersections) - 2):
+    very_end = convert.latlng(intersections[-1])
+    last_light = convert.latlng(intersections[-2])
+    
+    url_distance = "https://maps.googleapis.com/maps/api/distancematrix/json"
+    parameters_distance = {"origins": last_light,
+                                "destinations": very_end,  
+                                "arrival_time": convert.time(time_arrival), 
+                                "key": api_key}
+    response_directions = requests.get(url_distance, params=parameters_distance)
+    ## turns the api response into json formating 
+    json_directions = (response_directions.json())
+    final_directions = json.dumps(json_directions, indent = 4)
+    ## grabs the time inbetween the lights from the api response
+    duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
+    time = datetime.timedelta(seconds = duration)
+    time_arrival = time_arrival - time
+
+
+    copy_manuvers = maneuver_list
+    copy_intersections = intersections
+    copy_bearings = bearing_list
+
+    maneuver_list = maneuver_list[::-1]
+    intersections = intersections[::-1]
+    bearing_list = bearing_list[::-1]
+
+    while empty_value <= (len(intersections) - 2):
         print(empty_value)
         waypoint = (intersections[empty_value])
         print(waypoint)
         ## if the waypoint is the endpoint:
         if empty_value == 0:
-            starting_point = (intersections[1])
-            end_point = (intersections[0])
+            continue
         else:
             starting_point = (intersections[(empty_value + 1)])
             end_point = (intersections[empty_value])
@@ -235,7 +257,6 @@ def route(starting_point, end_point, input_time):
                             "arrival_time": convert.time(time_arrival), 
                             "key": api_key}
         
-        url_distance = "https://maps.googleapis.com/maps/api/distancematrix/json"
 
         ## gets the api response
         response_directions = requests.get(url_distance, params=parameters_distance)
@@ -259,9 +280,146 @@ def route(starting_point, end_point, input_time):
             bearing = "south"
         if 225 <= bearing_value < 315:
             bearing = "west"
+
+        move = (maneuver_list[empty_value])
+
+        green_turn = (data["intersections"][empty_value]["directions"][bearing][move]["start_time"])
+        year, month, day, hour, minute, second = map(int, green_turn.split('-'))
+        ## formats the time the light turns green in date time format
+        turned_at = datetime.datetime(year, month, day, hour, minute, second)
+
+        between_time = time_arrival - turned_at
+        totaltime = timedelta.total_seconds(between_time)
+
+        green = (data["intersections"][empty_value]["directions"][bearing][move]["green_time"])
+        green_time = sum(green) / len(green)
+        print(green_time)
+        red = (data["intersections"][empty_value]["directions"][bearing][move]["red_time"])
+        red_time = sum(red) / len(red)
+        cycletime = green_time + red_time
+        rawnum = totaltime / cycletime
+        ## the number of complete cycles that can be run in that time
+        truncated_value = math.floor(rawnum)
+        ## the decimal of the number of incomplete cycles that can be run in that time
+        leftover = rawnum - truncated_value
+        ## the number of seconds into the new cycle the light is
+        partialcycle = leftover * cycletime
+        ## determines if light is red or green and tells user how much longer the light will be red or green for
+        if partialcycle <= green_time:
+            timetochange = round(green_time - partialcycle, 3)
+            green_count = green_count + 1
+            print( "The light will be GREEN for", timetochange, "more seconds.")
         else:
-            print("error: ", bearing_value)
-        print(bearing)
+            timeinred = partialcycle - green_time
+            redleft = round(red_time - timeinred, 3)
+            red_count = red_count + 1
+            print("The light will be RED for", redleft, "more seconds.")
+            time_arrival -= datetime.timedelta(seconds = redleft)
+
         empty_value += 1
 
+    rounded = time_arrival + timedelta(seconds=(60 - time_arrival.second) % 60)
+    print(rounded)
+
+    ## add two minutes to the rounded time
+
+    added_time = datetime.timedelta(minutes=2)
+
+    one_min_change = datetime.timedelta(minutes=1)
+    estimated_time = rounded + added_time
+    minimum_time = rounded - added_time
+
+    ## empty values
+    greens = []
+    reds = []
+    dep_times = []
+    arrivals = []
+
+    empty_value_one: 0
+    departure = estimated_time
+    while departure >= minimum_time:
+        while empty_value_one < (len(copy_intersections) - 2):
+            starting_point = (copy_intersections[empty_value_one])
+            end_point = (copy_intersections[(empty_value_one + 1)])
+            final = convert.latlng(end_point)
+            begining = convert.latlng(starting_point)
+            print("final: ", final)
+            print("begining: ", begining)
+
+            parameters_distance = {"origins": begining,
+                                    "destinations": final,  
+                                    "departure_time": convert.time(estimated_time), 
+                                    "traffic_model": "best_guess",
+                                    "key": api_key}
+                
+
+            ## gets the api response
+            response_directions = requests.get(url_distance, params=parameters_distance)
+            ## turns the api response into json formating 
+            json_directions = (response_directions.json())
+            final_directions = json.dumps(json_directions, indent = 4)
+            ## grabs the time inbetween the lights from the api response
+            duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
+            time = datetime.timedelta(seconds = duration)
+            ## update the running time by subtracting the arrival time from the inbetween time
+            estimated_time += time
+
+            bearing_value = (bearing_list[empty_value])
+            if 315 <= bearing_value <= 360:
+                bearing = "north"
+            if 0 <= bearing_value < 45:
+                bearing = "north"
+            if 45 <= bearing_value < 135:
+                bearing = "east"
+            if 135 <= bearing_value < 225:
+                bearing = "south"
+            if 225 <= bearing_value < 315:
+                bearing = "west"
+
+            move = (copy_manuvers[empty_value_one])
+
+            green_turn = (data["intersections"][empty_value_one]["directions"][bearing][move]["start_time"])
+            year, month, day, hour, minute, second = map(int, green_turn.split('-'))
+            ## formats the time the light turns green in date time format
+            turned_at = datetime.datetime(year, month, day, hour, minute, second)
+
+            between_time = time_arrival - turned_at
+            totaltime = timedelta.total_seconds(between_time)
+
+            green = (data["intersections"][empty_value]["directions"][bearing][move]["green_time"])
+            green_time = sum(green) / len(green)
+            print(green_time)
+            red = (data["intersections"][empty_value]["directions"][bearing][move]["red_time"])
+            red_time = sum(red) / len(red)
+            cycletime = green_time + red_time
+            rawnum = totaltime / cycletime
+            ## the number of complete cycles that can be run in that time
+            truncated_value = math.floor(rawnum)
+            ## the decimal of the number of incomplete cycles that can be run in that time
+            leftover = rawnum - truncated_value
+            ## the number of seconds into the new cycle the light is
+            partialcycle = leftover * cycletime
+            ## determines if light is red or green and tells user how much longer the light will be red or green for
+            if partialcycle <= green_time:
+                timetochange = round(green_time - partialcycle, 3)
+                green_count = green_count + 1
+                print( "The light will be GREEN for", timetochange, "more seconds.")
+            else:
+                timeinred = partialcycle - green_time
+                redleft = round(red_time - timeinred, 3)
+                red_count = red_count + 1
+                print("The light will be RED for", redleft, "more seconds.")
+                estimated_time += datetime.timedelta(seconds = redleft)
+            empty_value_one += 1
+            
+        greens.append(green_count)
+        reds.append(red_count)
+        dep_times.append(departure)
+        arrivals.append(estimated_time)
+
+            
+
+        departure -= one_min_change
+
+    
 route(starting_point ="6281 W Alder Ave, Littleton, CO 80128", end_point ="7034 W Roxbury Pl, Littleton, CO 80128", input_time = "2024-3-31-00-00-00")
