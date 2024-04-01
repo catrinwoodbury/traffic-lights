@@ -322,12 +322,17 @@ def route(starting_point, end_point, input_time):
     print(rounded)
 
     ## add two minutes to the rounded time
-
     added_time = datetime.timedelta(minutes=2)
 
+    ## amount that each trial will change by
     one_min_change = datetime.timedelta(minutes=1)
+
+    ## the rounded time plus two minues
     estimated_time = rounded + added_time
+    print(estimated_time)
+    ## the rounded time nimus two minutes
     minimum_time = rounded - added_time
+    print(minimum_time)
 
     ## empty values
     greens = []
@@ -336,9 +341,11 @@ def route(starting_point, end_point, input_time):
     arrivals = []
 
     empty_value_one: 0
-    departure = estimated_time
-    while departure >= minimum_time:
-        while empty_value_one < (len(copy_intersections) - 2):
+    ## while the estimated_time is greater than the rounded time minus two minutes
+    while minimum_time <= estimated_time <= (rounded + added_time):
+        ## while the open value is less than the length of the route minus two
+        while 0 <= empty_value_one < ((len(copy_intersections)) - 2):
+            departure = estimated_time
             starting_point = (copy_intersections[empty_value_one])
             end_point = (copy_intersections[(empty_value_one + 1)])
             final = convert.latlng(end_point)
@@ -348,7 +355,7 @@ def route(starting_point, end_point, input_time):
 
             parameters_distance = {"origins": begining,
                                     "destinations": final,  
-                                    "departure_time": convert.time(estimated_time), 
+                                    "departure_time": convert.time(departure), 
                                     "traffic_model": "best_guess",
                                     "key": api_key}
                 
@@ -362,9 +369,9 @@ def route(starting_point, end_point, input_time):
             duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
             time = datetime.timedelta(seconds = duration)
             ## update the running time by subtracting the arrival time from the inbetween time
-            estimated_time += time
+            departure = departure + time
 
-            bearing_value = (bearing_list[empty_value])
+            bearing_value = (copy_bearings[empty_value])
             if 315 <= bearing_value <= 360:
                 bearing = "north"
             if 0 <= bearing_value < 45:
@@ -383,7 +390,7 @@ def route(starting_point, end_point, input_time):
             ## formats the time the light turns green in date time format
             turned_at = datetime.datetime(year, month, day, hour, minute, second)
 
-            between_time = time_arrival - turned_at
+            between_time = departure - turned_at
             totaltime = timedelta.total_seconds(between_time)
 
             green = (data["intersections"][empty_value]["directions"][bearing][move]["green_time"])
@@ -409,7 +416,7 @@ def route(starting_point, end_point, input_time):
                 redleft = round(red_time - timeinred, 3)
                 red_count = red_count + 1
                 print("The light will be RED for", redleft, "more seconds.")
-                estimated_time += datetime.timedelta(seconds = redleft)
+                departure = (datetime.timedelta(seconds = redleft)) + departure
             empty_value_one += 1
             
         greens.append(green_count)
@@ -419,7 +426,7 @@ def route(starting_point, end_point, input_time):
 
             
 
-        departure -= one_min_change
+        estimated_time = estimated_time - one_min_change
 
     
-route(starting_point ="6281 W Alder Ave, Littleton, CO 80128", end_point ="7034 W Roxbury Pl, Littleton, CO 80128", input_time = "2024-3-31-00-00-00")
+route(starting_point ="6281 W Alder Ave, Littleton, CO 80128", end_point ="7034 W Roxbury Pl, Littleton, CO 80128", input_time = "2024-4-2-00-00-00")
