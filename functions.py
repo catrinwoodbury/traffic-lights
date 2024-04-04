@@ -419,8 +419,11 @@ def route(starting_point, end_point, input_time):
                     red_count1 = red_count1 + 1
                     print("The light will be RED for", redleft, "more seconds.")
                     departure = (datetime.timedelta(seconds = redleft)) + departure
+                print("departure: ",  departure)
+                #year, month, day, hour, minute, second = map(int, str(departure).split(','))
+                #estimated_arrival_time = datetime.datetime(year, month, day, hour, minute, second)
                 empty_value_one += 1
-        return(green_count, red_count, departure)
+        return(green_count, red_count, str(departure))
                 
         ## while the estimated_time is greater than the rounded time minus two minutes
     while minimum_time <= estimated_time <= (rounded + added_time):
@@ -429,4 +432,4 @@ def route(starting_point, end_point, input_time):
         estimated_time = estimated_time - one_min_change
 
     
-route(starting_point ="6281 W Alder Ave, Littleton, CO 80128", end_point ="7034 W Roxbury Pl, Littleton, CO 80128", input_time = "2024-4-7-00-00-00")
+route(starting_point ="6281 W Alder Ave, Littleton, CO 80128", end_point ="7034 W Roxbury Pl, Littleton, CO 80128", input_time = "2024-4-7-00-00-17")
