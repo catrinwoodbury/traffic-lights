@@ -2,7 +2,7 @@
     "intersections": [
         {
             "name": "KenCaryl and Pierce",
-            "lat,lng": [39.580695392455546, -105.07284047189508],
+            "lat,lng": [39.58069813273103, -105.07285041128019],
             "directions":
                 {
                     "north":{
@@ -77,7 +77,7 @@
         },
         {
             "name": "Coalmine and Pierce",
-            "lat,lng": [39.595231849420514, -105.07274900039232],
+            "lat,lng": [39.59522574532946, -105.07274839091511],
             "directions":
                 {
                     "north":{
@@ -153,7 +153,7 @@
         },
         {
             "name": "Bowles and Pierce",
-            "lat,lng": [39.60981883597623, -105.07255889909767],
+            "lat,lng": [39.6098186258425, -105.07255977833783],
             "directions":
                 {
                     "north":{
@@ -175,127 +175,52 @@
                     },
                     "east":{
                         "turn-right":{
-                            "green_time": 30,
-                            "red_time": 15,
+                            "green_time": [30, 30],
+                            "red_time": [15, 15],
                             "start_time": "2023-12-25-6-20-00"
                         },
                         "turn-left":{
-                            "green_time": 30,
-                            "red_time": 15,
+                            "green_time": [30, 30],
+                            "red_time": [15, 15],
                             "start_time": "2023-12-25-6-20-00"
                         },
                         "straight":{
-                            "green_time": 30,
-                            "red_time": 15,
+                            "green_time": [30,30],
+                            "red_time": [15, 15],
                             "start_time": "2023-12-25-6-20-00"
                         }
                     },
                 "south":{
                         "turn-right":{
-                            "green_time": [30],
-                            "red_time": [15],
+                            "green_time": [30, 30],
+                            "red_time": [15, 15],
                             "start_time": "2023-12-25-6-20-00"
                         },
                         "turn-left":{
-                            "green_time": [30],
-                            "red_time": [15],
+                            "green_time": [30, 30],
+                            "red_time": [15, 15],
                             "start_time": "2023-12-25-6-20-00"
                         },
                         "straight":{
-                            "green_time": [30],
-                            "red_time": [15],
+                            "green_time": [30, 30],
+                            "red_time": [15, 15],
                             "start_time": "2023-12-25-6-20-00"
                         }
                     }, 
                 "west":{
                         "turn-right":{
-                            "green_time": [30],
-                            "red_time": [15],
+                            "green_time": [30, 30],
+                            "red_time": [15, 15],
                             "start_time": "2023-12-25-6-20-00"
                         },
                         "turn-left":{
-                            "green_time": [30],
-                            "red_time": [15],
+                            "green_time": [30, 30],
+                            "red_time": [15, 15],
                             "start_time": "2023-12-25-6-20-00"
                         },
                         "straight":{
-                            "green_time": [30],
-                            "red_time": [15],
-                            "start_time": "2023-12-25-6-20-00"
-                        }
-                    }   
-                }
-        },
-        {
-            "name": "Pierce and Chatfield",
-            "lat,lng": [39.56621801088418, -105.07284906826595],
-            "directions":
-                {
-                    "north":{
-                        "turn-right":{
-                            "green_time": [30],
-                            "red_time": [15],
-                            "start_time": "2023-12-25-6-20-00"
-                        },
-                        "turn-left":{
-                            "green_time": [30],
-                            "red_time": [15],
-                            "start_time": "2023-12-25-6-20-00"
-                         },
-                        "straight":{
-                            "green_time": [30],
-                            "red_time": [15],
-                            "start_time": "2023-12-25-6-20-00"
-                        }
-                    },
-                    "east":{
-                        "turn-right":{
-                            "green_time": [30],
-                            "red_time": [15],
-                            "start_time": "2023-12-25-6-20-00"
-                        },
-                        "turn-left":{
-                            "green_time": [30],
-                            "red_time": [15],
-                            "start_time": "2023-12-25-6-20-00"
-                        },
-                        "straight":{
-                            "green_time": [30],
-                            "red_time": [15],
-                            "start_time": "2023-12-25-6-20-00"
-                        }
-                    },
-                "south":{
-                        "turn-right":{
-                            "green_time": [30],
-                            "red_time": [15],
-                            "start_time": "2023-12-25-6-20-00"
-                        },
-                        "turn-left":{
-                            "green_time": [30],
-                            "red_time": [15],
-                            "start_time": "2023-12-25-6-20-00"
-                        },
-                        "straight":{
-                            "green_time": [30],
-                            "red_time": [15],
-                            "start_time": "2023-12-25-6-20-00"
-                        }
-                    }, 
-                "west":{
-                        "turn-right":{
-                            "green_time": [30],
-                            "red_time": [15],
-                            "start_time": "2023-12-25-6-20-00"
-                        },
-                        "turn-left":{
-                            "green_time": [30],
-                            "red_time": [15],
-                            "start_time": "2023-12-25-6-20-00"
-                        },
-                        "straight":{
-                            "green_time": [30],
-                            "red_time": [15],
+                            "green_time": [30, 30],
+                            "red_time": [15, 15],
                             "start_time": "2023-12-25-6-20-00"
                         }
                     }   
