@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+import os
 import datetime
 from math import sin, cos, sqrt, atan2, radians, degrees 
 import json
@@ -5,6 +7,11 @@ import requests
 from googlemaps import convert
 from datetime import timedelta
 import math
+
+## gets the api key
+load_dotenv(dotenv_path='api_key.env')
+api_key = os.getenv('API_KEY')
+print("API KEY? " , api_key)
 
 def route(starting_point, end_point, input_time):
     ## empty lists
@@ -16,11 +23,6 @@ def route(starting_point, end_point, input_time):
     green_count = 0
     ## radius of the earth in miles
     radius = 3959.87433
-
-    ## gets the api key
-    with open("api_key.json") as api:
-        authent = json.load(api)
-    api_key = str(authent["api_key"])
 
     ## opens and parses the json database
     f = open('intervals.json', "r")
@@ -468,4 +470,4 @@ def route(starting_point, end_point, input_time):
         estimated_time = estimated_time - one_min_change
 
     
-route(starting_point = "8131 S Pierce St, Littleton, CO 80128", end_point = "5960 S Eaton Ln, Littleton, CO 80123", input_time = "2024-4-8-13-10-00")
+route(starting_point = "8131 S Pierce St, Littleton, CO 80128", end_point = "5960 S Eaton Ln, Littleton, CO 80123", input_time = "2024-12-24-13-10-00")
