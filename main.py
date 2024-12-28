@@ -400,7 +400,6 @@ def route(starting_point, end_point, time_arrival):
                     end_point = (copy_intersections[(empty_value_one + 1)])
                     final = convert.latlng(end_point)
                     begining = convert.latlng(starting_point)
-                    print("begining: ", begining)
                    
 
                     ## turns the api response into json formating 
@@ -466,7 +465,7 @@ def route(starting_point, end_point, time_arrival):
                     empty_value_one += 1
                     rounded_arrival_time = departure + timedelta(seconds=(60 - departure.second) % 60)
 
-        return(green_count1, red_count1, (rounded_arrival_time))
+        return(("Green Lights: ", green_count1), ("Red Lights: ", red_count1), (rounded_arrival_time))
                 
         ## while the estimated_time is greater than the rounded time minus two minutes
     while minimum_time <= estimated_time <= (rounded + added_time):
@@ -474,10 +473,13 @@ def route(starting_point, end_point, time_arrival):
         arrival_time = (listing[2])
         
         if arrival_time < user_time_arrival:
-            print("Departure Time: ", estimated_time)
-            print(listing)
+            print("Departure Time: ", estimated_time.strftime("%m/%d/%Y, %H:%M:%S"))
+            print(listing[0])
+            print(listing[1])
+            print(listing[2].strftime("%m/%d/%Y, %H:%M:%S"))
+
         
         estimated_time = estimated_time - one_min_change
 
     
-route(starting_point = "8131 S Pierce St, Littleton, CO 80128", end_point = "5960 S Eaton Ln, Littleton, CO 80123", time_arrival = "2024-12-29-13-10-00")
+route(starting_point = "8131 S Pierce St, Littleton, CO 80128", end_point = "5960 S Eaton Ln, Littleton, CO 80123", time_arrival = "2024-12-29-4-10-00")
