@@ -1,82 +1,91 @@
 from dotenv import load_dotenv
 import os
-import datetime
 from math import sin, cos, sqrt, atan2, radians, degrees 
 import json
 import requests
 from googlemaps import convert
+import datetime
 from datetime import timedelta
 import math
 
+## radius of the earth in miles
+radius = 3959.87433
+## API directions request
+url_directions = "https://maps.googleapis.com/maps/api/directions/json"
+## API distance request
+url_distance = "https://maps.googleapis.com/maps/api/distancematrix/json"
+
+
 ## gets the api key
-load_dotenv(dotenv_path='api_key.env')
-api_key = os.getenv('API_KEY')
-print("API KEY? " , api_key)
+def get_api_key():
+    load_dotenv(dotenv_path='api_key.env')
+    api_key = os.getenv('API_KEY')
+    return(api_key)
 
-def route(starting_point, end_point, input_time):
-    ## empty lists
-    original_index_list = []
-    intersections = []
-    distance = []
-    maneuver_list = []
-    red_count = 0
-    green_count = 0
-    ## radius of the earth in miles
-    radius = 3959.87433
+def get_directions(starting_point, end_point, end_time):
 
-    ## opens and parses the json database
-    f = open('intervals.json', "r")
-    data = json.loads(f.read())
-
-    year, month, day, hour, minute, second = map(int, str(input_time).split('-'))
-    time_arrival = datetime.datetime(year, month, day, hour, minute, second)
-
-    user_time_arrival = time_arrival
-
-    url_directions = "https://maps.googleapis.com/maps/api/directions/json"
-
+    
     ## DIRECTIONS calculation for the entire route:
     ## parameters
     parameters_directions = {"origin": starting_point,
                         "destination": end_point,  
-                        "arrival_time": convert.time(time_arrival), 
-                        "key": api_key}
+                        "arrival_time": convert.time(end_time), 
+                        "key": get_api_key()}
     ## gets the request
     response_directions = requests.get(url_directions, params=parameters_directions)
     ## turns the request into json format
     json_directions = (response_directions.json())
     final_directions = json.dumps(json_directions, indent = 4)
-    ## gets the polyline and turns it into lat longs for the entire route
-    poly_line = (json_directions["routes"][0]["overview_polyline"]["points"])
-    decode = convert.decode_polyline(poly_line)
+    return(json_directions)
 
+
+def polyline_extraction(directions):
+    ## gets the polyline and turns it into lat longs for the entire route
+    poly_line = (directions["routes"][0]["overview_polyline"]["points"])
+    decoded_polyline = convert.decode_polyline(poly_line)
+    return(decoded_polyline)
+
+
+def get_json_data():
+    ## opens and parses the json data
+    with open('intervals.json', 'r') as f:
+        data = json.load(f)
+    return(data)
+
+def distance_calc(lat1, long1, lat2, long2):
+## calculates the distance between the intersection and polyline
+        dlon = long2 - long1
+        dlat = lat2 - lat1
+        a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+        c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        ## radius of the earth in miles
+        distances = radius * c
+        ## convert to feet
+        final = distances * 5280
+        return(final)
+
+def extract_intersections(data, decoded_polyline):
+    intersections = []
+    original_index_list =[]
     ## locates all lat long values in intersection data
     coords = [cord["lat,lng"] for cord in data["intersections"]] 
     ## for each lat long value
     for i in coords:
         ## turns the lat long into a tuple
-        file = tuple(i)
+        tupled_lat_long = tuple(i)
         ## converts to google map lat long format
-        result = convert.normalize_lat_lng(file)
+        normalized_lat_long = convert.normalize_lat_lng(tupled_lat_long)
         ## breaks tuple into specific lat long coords
-        lat2 = radians(result[0])
-        long2 = radians(result[1])
+        lat2 = radians(normalized_lat_long[0])
+        long2 = radians(normalized_lat_long[1])
     ## for each lat long coord in the polyline
-        for s in decode:
+        for s in decoded_polyline:
             ## breaks lat long coords down 
-            end = convert.normalize_lat_lng(s)
-            end_lat = radians(end[0])
-            end_lng = radians(end[1])
-            ## calculates the distance between the intersection and polyline
-            dlon = long2 - end_lng
-            dlat = lat2 - end_lat
-            a = sin(dlat / 2)**2 + cos(end_lat) * cos(lat2) * sin(dlon / 2)**2
-            c = 2 * atan2(sqrt(a), sqrt(1 - a))
-            ## radius of the earth in miles
-            distances = radius * c
-            ## convert to feet
-            final = distances * 5280
-            if final <= 800:
+            end_point = convert.normalize_lat_lng(s)
+            end_lat = radians(end_point[0])
+            end_lng = radians(end_point[1])
+            distance_between = distance_calc(end_lat, end_lng, lat2, long2)
+            if distance_between <= 50:
                 ## create a list of the original intersection indexes
                 indexes = coords.index(i)
                 original_index_list.append(indexes)
@@ -84,22 +93,63 @@ def route(starting_point, end_point, input_time):
                 ## create a list of the intersections on the route
                 intersections.append(tuple(i))
     intersections = list(set(intersections))
-    ## gets the start location in google maps format 
-    start = (convert.normalize_lat_lng(json_directions["routes"][0]["legs"][0]["start_location"]))
-    ## breaks the start location down into individual lat lngs 
+    return intersections, original_index_list
+
+def calc_bearing(endlong, startlong, endlat, startlat):
+    dL = (endlong)-(startlong)
+    X = cos(endlat)* sin(dL)
+    Y = cos(startlat)*sin(endlat) - sin(startlat)*cos(endlat)* cos(dL)
+    degree = atan2(X,Y)
+    return degree
+
+def get_distance(beginning, end, time):
+    parameters_distance = {"origins": beginning,
+                                "destinations": end,  
+                                "arrival_time": convert.time(time), 
+                                "key": get_api_key()}
+    response_distance = requests.get(url_distance, params=parameters_distance)
+    ## turns the api response into json formating 
+    json_distance = (response_distance.json())
+    final_distance = json.dumps(json_distance, indent = 4)
+    return json_distance
     
+
+def route(starting_point, end_point, time_arrival):
+    ## empty lists
+    original_index_list = []
+    distance = []
+    maneuver_list = []
+    red_count = 0
+    green_count = 0
+
+    data = get_json_data()
+
+    year, month, day, hour, minute, second = map(int, str(time_arrival).split('-'))
+    time_arrival = datetime.datetime(year, month, day, hour, minute, second)
+    ## gets directions from the api
+    directions = get_directions(starting_point, end_point, time_arrival)
+
+    ## decodes the directions polyline into lat longs
+    decoded_polyline = polyline_extraction(directions)
+    
+    ## creates duplicate variable for later use
+    user_time_arrival = time_arrival
+    
+    ## extracts intersections and their indexes that are along the route
+    intersections, original_index_list = extract_intersections(data, decoded_polyline)
+    
+    ## gets the start location in google maps format 
+    start = (convert.normalize_lat_lng(directions["routes"][0]["legs"][0]["start_location"]))
+    ## breaks the start location down into individual lat lngs 
+    start_lat = radians(start[0])
+    start_long = radians(start[1])
+
     ## calculates the distance between the start location and each intersection
     for i in intersections:
         end = convert.normalize_lat_lng(i)
         end_lat = radians(end[0])
-        end_lng = radians(end[1])
-        dlon = long2 - end_lng
-        dlat = lat2 - end_lat
-        a = sin(dlat / 2)**2 + cos(end_lat) * cos(lat2) * sin(dlon / 2)**2
-        c = 2 * atan2(sqrt(a), sqrt(1 - a))
-        distances = radius * c
-        ## convert to feet
-        final = distances * 5280
+        end_long = radians(end[1])
+        final = distance_calc(end_lat, end_long, start_lat, start_long)
         ## creates a list of the distances
         distance.append(final)
     
@@ -109,8 +159,9 @@ def route(starting_point, end_point, input_time):
     bearing_list = [intersections[i] for i in sort]
     maneuver_list = [intersections[i] for i in sort]
     sorted_index =[original_index_list[i] for i in sort]
-    steps = (json_directions["routes"][0]["legs"][0]["steps"])
+    steps = (directions["routes"][0]["legs"][0]["steps"])
 
+    ## reverses these lists
     maneuver_list = maneuver_list[::-1]
     bearing_list = bearing_list[::-1]
 
@@ -124,24 +175,16 @@ def route(starting_point, end_point, input_time):
         for i in steps:
             lat1 = radians(i["start_location"]["lat"])
             long1 = radians(i["start_location"]["lng"])
-            dlon = long2 - long1
-            dlat = lat2 - lat1
-            a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
-            c = 2 * atan2(sqrt(a), sqrt(1 - a))
-            distances = radius * c
-            ## convert to feet
-            final = distances * 5280
-            if final <= 150:
+            final = distance_calc(lat1, long1, lat2, long2)
+            ## determines if the step applies to the intersection
+            if final <= 50:
                 maneuver = (i["maneuver"])
                 if maneuver == "turn-right":
                     endlat = radians(i["end_location"]["lat"])
-                    endlng = radians(i["end_location"]["lng"])
+                    endlong = radians(i["end_location"]["lng"])
                     startlat = radians(i["start_location"]["lat"])
-                    startlng = radians(i["start_location"]["lng"])
-                    dL = (endlng)-(startlng)
-                    X = cos(endlat)* sin(dL)
-                    Y = cos(startlat)*sin(endlat) - sin(startlat)*cos(endlat)* cos(dL)
-                    degree = atan2(X,Y)
+                    startlong = radians(i["start_location"]["lng"])
+                    degree = calc_bearing(endlong, startlong, endlat, startlat)
                     ## calculates the bearing inbetween the two lights
                     result = ((degrees(degree) - 90) % 360)
                     index = bearing_list.index(s)
@@ -150,13 +193,10 @@ def route(starting_point, end_point, input_time):
                     maneuver_list[index] = maneuver
                 if maneuver == "turn-left":
                     endlat = radians(i["end_location"]["lat"])
-                    endlng = radians(i["end_location"]["lng"])
+                    endlong = radians(i["end_location"]["lng"])
                     startlat = radians(i["start_location"]["lat"])
-                    startlng = radians(i["start_location"]["lng"])
-                    dL = (endlng)-(startlng)
-                    X = cos(endlat)* sin(dL)
-                    Y = cos(startlat)*sin(endlat) - sin(startlat)*cos(endlat)* cos(dL)
-                    degree = atan2(X,Y)
+                    startlong = radians(i["start_location"]["lng"])
+                    degree = calc_bearing(endlong, startlong, endlat, startlat)
                     ## calculates the bearing inbetween the two lights
                     result = ((degrees(degree) + 90) % 360)
                     index = bearing_list.index(s)
@@ -168,6 +208,7 @@ def route(starting_point, end_point, input_time):
     for l in bearing_list:
         if type(l) == tuple:
             maneuver = "straight"
+            ## sets the maneuver of all other bearing values to straight
             index  = bearing_list.index(l)
             maneuver_list[index] = maneuver
             if index == 0:
@@ -175,14 +216,12 @@ def route(starting_point, end_point, input_time):
                 ## converts to google map lat long format
                 result = convert.normalize_lat_lng(tupleing)
                 ## breaks tuple into specific lat long coords
-                startlat = radians(json_directions["routes"][0]["legs"][0]["start_location"]["lat"])
-                startlng = radians(json_directions["routes"][0]["legs"][0]["start_location"]["lng"])
+                startlat = radians(directions["routes"][0]["legs"][0]["start_location"]["lat"])
+                startlong = radians(directions["routes"][0]["legs"][0]["start_location"]["lng"])
                 endlat = radians(result[0])
-                endlng = radians(result[1])
-                dL = (endlng)-(startlng)
-                X = cos(endlat)* sin(dL)
-                Y = cos(startlat)*sin(endlat) - sin(startlat)*cos(endlat)* cos(dL)
-                degree = atan2(X,Y)
+                endlong = radians(result[1])
+                degree = calc_bearing(endlong, startlong, endlat, startlat)
+
                 ## calculates the bearing inbetween the two lights
                 result = (degrees(degree) % 360)
                  ## add the bearing to the original list
@@ -204,8 +243,8 @@ def route(starting_point, end_point, input_time):
                     index2 = bearing_list.index(l)
                     bearing_list[index2] = result
 
-    start = (convert.normalize_lat_lng(json_directions["routes"][0]["legs"][0]["start_location"]))
-    end = (convert.normalize_lat_lng(json_directions["routes"][0]["legs"][0]["end_location"]))
+    start = (convert.normalize_lat_lng(directions["routes"][0]["legs"][0]["start_location"]))
+    end = (convert.normalize_lat_lng(directions["routes"][0]["legs"][0]["end_location"]))
     intersections.insert(0, start)
     lastvalue = len(intersections)
     intersections.insert(lastvalue , end)
@@ -218,14 +257,8 @@ def route(starting_point, end_point, input_time):
     very_end = convert.latlng(intersections[-1])
     last_light = convert.latlng(intersections[-2])
     
-    url_distance = "https://maps.googleapis.com/maps/api/distancematrix/json"
-    parameters_distance = {"origins": last_light,
-                                "destinations": very_end,  
-                                "arrival_time": convert.time(time_arrival), 
-                                "key": api_key}
-    response_directions = requests.get(url_distance, params=parameters_distance)
-    ## turns the api response into json formating 
-    json_directions = (response_directions.json())
+    
+    json_directions = get_distance(last_light, very_end,time_arrival)
     final_directions = json.dumps(json_directions, indent = 4)
     
     ## grabs the time inbetween the lights from the api response
@@ -263,22 +296,15 @@ def route(starting_point, end_point, input_time):
 
         final = convert.latlng(end_point)
         begining = convert.latlng(starting_point)
-
-      
-
-        parameters_distance = {"origins": begining,
-                            "destinations": final,  
-                            "arrival_time": convert.time(time_arrival), 
-                            "key": api_key}
-        
-
-        ## gets the api response
-        response_directions = requests.get(url_distance, params=parameters_distance)
+       
         ## turns the api response into json formating 
-        json_directions = (response_directions.json())
-        final_directions = json.dumps(json_directions, indent = 4)
+        json_distance = get_distance(begining, final, time_arrival)
+
+        ## turns the api response into json formating 
+        # json_distance = get_distance(begining, final, time_arrival)
+        # final_distance = json.dumps(json_distance, indent = 4)
         ## grabs the time inbetween the lights from the api response
-        duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
+        duration = (json_distance["rows"][0]["elements"][0]["duration"]["value"])
         time = datetime.timedelta(seconds = duration)
         ## update the running time by subtracting the arrival time from the inbetween time
         time_arrival -= time
@@ -358,20 +384,11 @@ def route(starting_point, end_point, input_time):
                     end_point = (copy_intersections[1])
                     final = convert.latlng(end_point)
                     begining = convert.latlng(starting_point)
-                    parameters_distance = {"origins": begining,
-                                        "destinations": final,  
-                                        "departure_time": convert.time(departure), 
-                                        "traffic_model": "best_guess",
-                                        "key": api_key}
-                    
-
-                    ## gets the api response
-                    response_directions = requests.get(url_distance, params=parameters_distance)
                     ## turns the api response into json formating 
-                    json_directions = (response_directions.json())
-                    final_directions = json.dumps(json_directions, indent = 4)
+                    json_distance = get_distance(begining, final, departure)
+                    final_distance = json.dumps(json_distance, indent = 4)
                     ## grabs the time inbetween the lights from the api response
-                    duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
+                    duration = (json_distance["rows"][0]["elements"][0]["duration"]["value"])
                     time = datetime.timedelta(seconds = duration)
                     ## update the running time by subtracting the arrival time from the inbetween time
                     departure = departure + time
@@ -383,22 +400,15 @@ def route(starting_point, end_point, input_time):
                     end_point = (copy_intersections[(empty_value_one + 1)])
                     final = convert.latlng(end_point)
                     begining = convert.latlng(starting_point)
+                    print("begining: ", begining)
                    
 
-                    parameters_distance = {"origins": begining,
-                                            "destinations": final,  
-                                            "departure_time": convert.time(departure), 
-                                            "traffic_model": "best_guess",
-                                            "key": api_key}
-                        
-
-                    ## gets the api response
-                    response_directions = requests.get(url_distance, params=parameters_distance)
                     ## turns the api response into json formating 
-                    json_directions = (response_directions.json())
-                    final_directions = json.dumps(json_directions, indent = 4)
+                    json_distance = get_distance(begining, final, departure)
+                    final_distance = json.dumps(json_distance, indent = 4)
+
                     ## grabs the time inbetween the lights from the api response
-                    duration = (json_directions["rows"][0]["elements"][0]["duration"]["value"])
+                    duration = (json_distance["rows"][0]["elements"][0]["duration"]["value"])
                     time = datetime.timedelta(seconds = duration)
                     ## update the running time by subtracting the arrival time from the inbetween time
                     departure = departure + time
@@ -470,4 +480,4 @@ def route(starting_point, end_point, input_time):
         estimated_time = estimated_time - one_min_change
 
     
-route(starting_point = "8131 S Pierce St, Littleton, CO 80128", end_point = "5960 S Eaton Ln, Littleton, CO 80123", input_time = "2024-12-24-13-10-00")
+route(starting_point = "8131 S Pierce St, Littleton, CO 80128", end_point = "5960 S Eaton Ln, Littleton, CO 80123", time_arrival = "2024-12-29-13-10-00")
